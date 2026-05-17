@@ -7,10 +7,14 @@ export function PedidoPreview({
   data,
   logoSrc,
   includeSignature,
+  mode = 'pedido',
+  validade,
 }: {
   data: PedidoFormData
   logoSrc: string | null
   includeSignature: boolean
+  mode?: 'pedido' | 'orcamento'
+  validade?: string
 }) {
   return (
     <div id="print-area" className="w-full mx-auto bg-white shadow-2xl p-6 sm:p-12 border border-gray-300 font-sans text-sm text-gray-800">
@@ -25,7 +29,12 @@ export function PedidoPreview({
         )}
         <h1 className="text-2xl font-bold text-gray-800">{EMPRESA.fantasia}</h1>
         <p className="text-base text-gray-500">Coberturas em Policarbonato</p>
-        <h2 className="text-xl font-bold tracking-widest mt-8">PEDIDO DE COMPRA</h2>
+        <h2 className="text-xl font-bold tracking-widest mt-8">
+          {mode === 'orcamento' ? 'ORÇAMENTO' : 'PEDIDO DE COMPRA'}
+        </h2>
+        {mode === 'orcamento' && validade && (
+          <p className="text-sm text-gray-600 mt-2">Orçamento válido até: {validade}</p>
+        )}
       </header>
 
       <main>
