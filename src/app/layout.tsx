@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
+import { InstallPrompt } from "@/components/layout/InstallPrompt"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,6 +16,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Toldos Fortaleza — Gestão Operacional",
   description: "App de pedidos, orçamentos e agendamentos",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: "TF App",
+    statusBarStyle: "black-translucent",
+  },
 }
 
 export default function RootLayout({
@@ -27,7 +34,14 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full">{children}</body>
+      <head>
+        <meta name="theme-color" content="#0369a1" />
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+      </head>
+      <body className="min-h-full">
+        {children}
+        <InstallPrompt />
+      </body>
     </html>
   )
 }

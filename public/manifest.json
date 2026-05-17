@@ -1,0 +1,25 @@
+{
+  "name": "Toldos Fortaleza",
+  "short_name": "TF App",
+  "description": "App de pedidos, orçamentos e agendamentos da Toldos Fortaleza",
+  "theme_color": "#0369a1",
+  "background_color": "#f1f5f9",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "start_url": "/dashboard",
+  "scope": "/",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
