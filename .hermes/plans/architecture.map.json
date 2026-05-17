@@ -39,7 +39,7 @@
       "id": "comp-header",
       "name": "Header Bar",
       "source": "src/components/layout/Header.tsx",
-      "description": "Barra superior com nome do usuário, avatar, botão de logout e toggle de tema escuro/claro.",
+      "description": "Barra superior com nome do usuário, avatar e botão de logout.",
       "confidence": "high",
       "type": "layout"
     },
@@ -106,14 +106,6 @@
       "description": "Progressive Web App: service worker com cache, install prompt no Android Chrome, meta tags iOS para tela cheia (Safari). Ícones 192px e 512px com logo em fundo azul.",
       "confidence": "high",
       "type": "infrastructure"
-    },
-    {
-      "id": "comp-theme",
-      "name": "Theme Toggle (Dark Mode)",
-      "source": "src/components/layout/ThemeToggle.tsx, src/app/globals.css",
-      "description": "Botão sol/lua que alterna modo escuro. Preferência salva em localStorage. Classes dark: aplicadas via document.documentElement.classList.toggle.",
-      "confidence": "high",
-      "type": "presentation"
     }
   ],
   "data_entities": [

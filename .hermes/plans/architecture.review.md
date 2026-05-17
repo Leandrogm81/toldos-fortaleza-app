@@ -125,7 +125,7 @@ src/
 │   ├── login/                  # Página de login
 │   └── orcamento/[token]/      # Página pública de aprovação
 ├── components/
-│   ├── layout/                 # Sidebar, Header, ThemeToggle, PWA
+│   ├── layout/                 # Sidebar, Header, PWA
 │   ├── pedido/                 # PedidoForm, PedidoPreview, SignaturePad
 │   └── cliente/                # ClienteForm, ClienteBusca
 ├── lib/
