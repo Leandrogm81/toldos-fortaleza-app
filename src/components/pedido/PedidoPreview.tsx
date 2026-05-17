@@ -57,15 +57,20 @@ export function PedidoPreview({
         <section className="mb-6">
           <h3 className="font-bold text-base text-sky-700 border-b-2 border-sky-700 pb-1 mb-3">Contratante</h3>
           <div className="space-y-px">
-            <p>Nome: {data.clientName}</p>
-            <p>Endereço: {data.clientAddress}</p>
-            <p>Bairro: {data.clientNeighborhood}</p>
-            <p>Cidade: {data.clientCity}</p>
-            <p>Telefone: {data.clientPhone}</p>
+            {data.clientName && <p>Nome: {data.clientName}</p>}
+            {data.clientAddress && <p>Endereço: {data.clientAddress}</p>}
+            {data.clientNeighborhood && <p>Bairro: {data.clientNeighborhood}</p>}
+            {data.clientCity && <p>Cidade: {data.clientCity}</p>}
+            {data.clientPhone && <p>Telefone: {data.clientPhone}</p>}
             {data.clientCnpj ? (
-              <p>CNPJ: {data.clientCnpj} / Inscrição Estadual: {data.clientIe}</p>
+              <>
+                {data.clientCnpj && <p>CNPJ: {data.clientCnpj}{data.clientIe ? ` / Inscrição Estadual: ${data.clientIe}` : ''}</p>}
+              </>
             ) : (
-              <p>CPF: {data.clientCpf} / RG: {data.clientRg}</p>
+              <>
+                {data.clientCpf && <p>CPF: {data.clientCpf}{data.clientRg ? ` / RG: ${data.clientRg}` : ''}</p>}
+                {!data.clientCpf && data.clientRg && <p>RG: {data.clientRg}</p>}
+              </>
             )}
           </div>
         </section>
@@ -75,11 +80,11 @@ export function PedidoPreview({
           <h3 className="font-bold text-base text-sky-700 border-b-2 border-sky-700 pb-1 mb-3">Produto(s)</h3>
           {data.products.map((product, index) => (
             <div key={index} className={`space-y-px ${index < data.products.length - 1 ? 'mb-3 pb-3 border-b border-gray-200' : ''}`}>
-              <p><span className="font-semibold">Item {index + 1}:</span> {product.item}</p>
-              <p><span className="font-semibold">Estrutura:</span> {product.structure}</p>
-              <p><span className="font-semibold">Material:</span> {product.material}</p>
-              <p><span className="font-semibold">Acessórios:</span> {product.accessories}</p>
-              <p><span className="font-semibold">Medida:</span> {product.measure}</p>
+              {product.item && <p><span className="font-semibold">Item {index + 1}:</span> {product.item}</p>}
+              {product.structure && <p><span className="font-semibold">Estrutura:</span> {product.structure}</p>}
+              {product.material && <p><span className="font-semibold">Material:</span> {product.material}</p>}
+              {product.accessories && <p><span className="font-semibold">Acessórios:</span> {product.accessories}</p>}
+              {product.measure && <p><span className="font-semibold">Medida:</span> {product.measure}</p>}
             </div>
           ))}
         </section>
@@ -92,7 +97,7 @@ export function PedidoPreview({
             </div>
           )}
           <div className="border border-black p-2">
-            Forma de pagamento: {data.paymentMethod}
+            Forma de pagamento: {data.paymentMethod || 'A combinar'}
           </div>
           <div className="border border-black p-2">
             Dados Bancários: {EMPRESA.banco} / Pix: {EMPRESA.pix}

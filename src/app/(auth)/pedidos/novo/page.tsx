@@ -69,9 +69,25 @@ export default function NovoPedidoPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Usuário não autenticado')
 
+      // Auto-save client to database
+      const { upsertClientFromForm } = await import('@/lib/utils/cliente-sync')
+      const clientId = await upsertClientFromForm({
+        clientName: formData.clientName,
+        clientPhone: formData.clientPhone,
+        clientCep: formData.clientCep,
+        clientAddress: formData.clientAddress,
+        clientNeighborhood: formData.clientNeighborhood,
+        clientCity: formData.clientCity,
+        clientCpf: formData.clientCpf,
+        clientCnpj: formData.clientCnpj,
+        clientRg: formData.clientRg,
+        clientIe: formData.clientIe,
+      })
+
       const docData = {
         type: 'pedido' as const,
         status: 'rascunho' as const,
+        client_id: clientId,
         date: formData.date,
         doc_data: formData as any,
         signature_data_url: formData.signatureDataUrl || null,

@@ -1,7 +1,7 @@
-export async function generatePDF(elementId: string, filename: string): Promise<void> {
-  const html2canvas = (await import('html2canvas')).default
-  const { jsPDF } = await import('jspdf')
+import html2canvas from 'html2canvas'
+import { jsPDF } from 'jspdf'
 
+export async function generatePDF(elementId: string, filename: string): Promise<void> {
   const printElement = document.getElementById(elementId)
   if (!printElement) throw new Error('Element not found')
 
