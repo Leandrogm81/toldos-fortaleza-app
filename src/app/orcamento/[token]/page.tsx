@@ -8,9 +8,10 @@ export default async function OrcamentoPublicoPage({ params }: { params: Promise
   const { token } = await params
   const cookieStore = await cookies()
 
+  // Use service_role to bypass RLS (public page, no auth)
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
       cookies: {
         getAll: () => cookieStore.getAll(),
