@@ -21,7 +21,7 @@ export default function NovoPedidoPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [currentOrderId, setCurrentOrderId] = useState<string | null>(null)
   const [actionsMenuOpen, setActionsMenuOpen] = useState(false)
-  const actionsMenuRef = useRef<HTMLDivElement>(null)
+  const [actionsMenuRef] = useState(() => useRef<HTMLDivElement>(null))
 
   // Close actions menu on click outside
   useEffect(() => {
@@ -32,6 +32,20 @@ export default function NovoPedidoPage() {
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  // Load logo from profile on mount
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return
+        const { data } = await supabase.from('profile').select('logo_data_url').eq('id', user.id).single()
+        if (data?.logo_data_url) setLogoSrc(data.logo_data_url)
+      } catch {}
+    }
+    loadProfile()
   }, [])
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
