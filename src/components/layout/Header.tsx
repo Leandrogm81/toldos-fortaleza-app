@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth, type Profile } from '@/lib/auth'
-import { ThemeToggle } from './ThemeToggle'
 
 export function Header() {
   const router = useRouter()
@@ -31,8 +30,7 @@ export function Header() {
   }
 
   return (
-    <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 sm:px-6 py-3 flex items-center justify-end gap-4">
-      <ThemeToggle />
+    <header className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 flex items-center justify-end gap-4">
       <div className="flex items-center gap-3">
         <div className="text-right">
           <p className="text-sm font-medium text-gray-900">{userName}</p>

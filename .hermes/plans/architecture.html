@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toldos Fortaleza — Mapa da Arquitetura</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: system-ui, sans-serif; background: #0f172a; color: #f1f5f9; padding: 20px; }
+h1 { text-align: center; margin-bottom: 8px; font-size: 1.5rem; }
+.subtitle { text-align: center; color: #94a3b8; margin-bottom: 24px; font-size: 0.85rem; }
+.legend { display: flex; justify-content: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; font-size: 0.8rem; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; max-width: 1300px; margin: 0 auto; }
+.card { background: #1e293b; border-radius: 12px; padding: 16px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; position: relative; }
+.card:hover { border-color: #38bdf8; transform: translateY(-2px); }
+.card.selected { border-color: #38bdf8; box-shadow: 0 0 20px rgba(56,189,248,0.3); }
+.card.domain { border-left: 4px solid #38bdf8; }
+.card.layout { border-left: 4px solid #a78bfa; }
+.card.infra { border-left: 4px solid #34d399; }
+.card.presentation { border-left: 4px solid #fbbf24; }
+.card h3 { font-size: 1rem; margin-bottom: 6px; }
+.card .meta { font-size: 0.7rem; color: #64748b; margin-bottom: 8px; }
+.card p { font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; }
+.detail-panel { display: none; background: #1e293b; border-radius: 12px; padding: 20px; margin: 20px auto; max-width: 800px; border: 1px solid #334155; }
+.detail-panel.active { display: block; }
+.detail-panel h2 { margin-bottom: 12px; color: #38bdf8; }
+.detail-panel .source { color: #64748b; font-size: 0.75rem; margin-bottom: 12px; }
+.detail-panel .connections { margin-top: 12px; }
+.detail-panel .conn { background: #0f172a; padding: 8px 12px; margin: 6px 0; border-radius: 8px; font-size: 0.8rem; border-left: 3px solid #38bdf8; }
+.detail-panel .conn .arrow { color: #38bdf8; }
+.section-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin: 24px 0 12px; }
+.chart { max-width: 800px; margin: 30px auto; }
+.chart-box { background: #1e293b; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+.chart-box h3 { margin-bottom: 8px; font-size: 0.9rem; }
+.flow-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 6px 0; font-size: 0.8rem; }
+.flow-row .box { background: #334155; padding: 4px 10px; border-radius: 6px; white-space: nowrap; }
+.flow-row .arrow-char { color: #38bdf8; font-weight: bold; }
+a { color: #38bdf8; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<h1>🏗️ Toldos Fortaleza — Mapa da Arquitetura</h1>
+<p class="subtitle">Sistema de Gestão Operacional — Clique nos cards para ver detalhes</p>
+
+<div class="legend">
+  <span><span class="dot" style="background:#38bdf8"></span> Domínio (negócio)</span>
+  <span><span class="dot" style="background:#a78bfa"></span> Layout</span>
+  <span><span class="dot" style="background:#34d399"></span> Infraestrutura</span>
+  <span><span class="dot" style="background:#fbbf24"></span> Apresentação</span>
+</div>
+
+<div class="section-title">📦 Componentes do Sistema</div>
+<div class="grid" id="grid"></div>
+
+<div class="section-title">🔄 Fluxos de Dados</div>
+<div class="chart" id="flows"></div>
+
+<div class="section-title">⚠️ Riscos</div>
+<div class="chart" id="risks"></div>
+
+<div id="detail" class="detail-panel"></div>
+
+<script>
+const DATA = {
+  components: [
+    { id:"comp-auth", name:"Auth Layer", type:"infra", desc:"Autenticação via Supabase Auth (email/senha). Estado global com listeners. Middleware protege rotas.", source:"src/lib/auth.ts, src/middleware.ts, src/app/login/page.tsx", conns:["Login Page ↔ Supabase Auth","Middleware ↔ Cookies","Auth state ↔ Layout"] },
+    { id:"comp-sidebar", name:"Sidebar Navigation", type:"layout", desc:"Menu lateral com Dashboard, Pedidos, Orçamentos, Agendamentos, Clientes. Responsivo com hamburger mobile.", source:"src/components/layout/Sidebar.tsx", conns:["Links para todas as páginas autenticadas","Colapsa em mobile (hamburger)"] },
+    { id:"comp-header", name:"Header Bar", type:"layout", desc:"Barra superior: nome do usuário, avatar, botão logout, toggle tema escuro/claro.", source:"src/components/layout/Header.tsx", conns:["auth.getUser() → nome","auth.signOut() → logout","localStorage → tema"] },
+    { id:"comp-pedido-form", name:"PedidoForm", type:"domain", desc:"Formulário de pedido PORTADO 1:1 do app Vite legado. Seções: logo, data, contratante com ClienteBusca, produtos dinâmicos, valor/pagamento, prazo, assinaturas. mode=pedido|orcamento.", source:"src/components/pedido/PedidoForm.tsx (531 linhas)", conns:["ClienteBusca → autocomplete","onChange → preview","handleSave → Supabase"] },
+    { id:"comp-pedido-preview", name:"PedidoPreview", type:"domain", desc:"Preview A4 do documento. Estilos INLINE com cores HEX (não Tailwind) para compatibilidade com html2canvas. Campos vazios não renderizam.", source:"src/components/pedido/PedidoPreview.tsx (160 linhas)", conns:["#print-area → html2canvas","formData → renderização condicional"] },
+    { id:"comp-signature", name:"SignaturePad + Modal", type:"domain", desc:"Canvas de assinatura com mouse e touch. High DPI (devicePixelRatio). Modal com checkbox 'Salvar no perfil'.", source:"src/components/pedido/SignaturePad.tsx", conns:["Canvas → dataURL","'Salvar no perfil' → profile.company_signature_data_url"] },
+    { id:"comp-cliente-form", name:"ClienteForm", type:"domain", desc:"Cadastro de cliente: máscaras CPF/CNPJ/telefone/CEP, autocomplete ViaCEP, toggle PF/PJ.", source:"src/components/cliente/ClienteForm.tsx", conns:["ViaCEP API → preenche endereço","Form → Supabase client table"] },
+    { id:"comp-cliente-busca", name:"ClienteBusca", type:"domain", desc:"Input com dropdown de busca Supabase. Debounce 300ms. Ao selecionar, preenche formulário do pedido.", source:"src/components/cliente/ClienteBusca.tsx", conns:["Supabase ILIKE → resultados","onSelect → PedidoForm.handleClientSelect"] },
+    { id:"comp-agendamentos", name:"Agendamentos Page", type:"domain", desc:"Abas Calendário (hoje, futuros, concluídos) e Prazos (pedidos vencidos/próximos). CRUD de agendamentos com modal. Tipos: medição, instalação, reparo, pós-venda, outro. Push notifications.", source:"src/app/(auth)/agendamentos/page.tsx (~500 linhas)", conns:["Supabase → appointments + documents","Notification API → push","deadline calculation → cores"] },
+    { id:"comp-dashboard", name:"Dashboard", type:"presentation", desc:"Home com cards KPI, ações rápidas e documentos recentes. Sem gráficos (recharts instalado, não usado).", source:"src/app/(auth)/dashboard/page.tsx", conns:["Supabase aggregate queries → KPIs","Links → pedidos/orçamentos/agendamentos"] },
+    { id:"comp-pwa", name:"PWA Layer", type:"infra", desc:"Service worker com cache, install prompt (Android), meta tags iOS, ícones 192+512px.", source:"public/sw.js, public/manifest.json, src/components/layout/PwaRegister.tsx", conns:["Service Worker → cache","manifest.json → ícones","beforeinstallprompt → prompt"] },
+    { id:"comp-theme", name:"Dark Mode", type:"presentation", desc:"Toggle sol/lua. Preferência em localStorage. Classes dark: via document.documentElement.", source:"src/components/layout/ThemeToggle.tsx, src/app/globals.css", conns:["localStorage → preferência","classList.toggle → CSS"] }
+  ],
+  flows: [
+    { title:"Criação de Pedido", steps:["Login","AuthLayout (logo+assinatura)","Preencher contratante (ClienteBusca)","Adicionar produtos","Valor/Pagamento/Prazo","Assinatura digital?","Salvar → upsertClient → document (JSONB)","PDF → html2canvas → jsPDF → download"] },
+    { title:"Orçamento → Pedido", steps:["Criar orçamento (mode=orcamento)","Salvar → gera public_token","Compartilhar link (WhatsApp)","Cliente acessa /orcamento/[token]","Aprova (sem login)","App: 'Converter em Pedido'","Novo document type=pedido"] },
+    { title:"Rastreamento de Prazos", steps:["Carregar pedidos com deliveryTime","Calcular deadline (data+prazo)","Classificar: vencido/hoje/amanhã/3d/7d","Tabela colorida na aba Prazos","Vencidos → Notification API (push)"] }
+  ],
+  risks: [
+    { title:"JSONB doc_data", severity:"⚠️ Médio", desc:"Flexível mas difícil para queries agregadas. Faturamento depende de parsing manual." },
+    { title:"Service Role Key", severity:"🔴 Alto", desc:"Em server component para bypass RLS. Se vazar para cliente, compromete banco." },
+    { title:"PWA no iOS", severity:"⚠️ Médio", desc:"Sem push notifications. Cache 50MB. Instalação manual via Compartilhar." },
+    { title:"Tailwind v4 + html2canvas", severity:"✅ Baixo", desc:"lab/oklch não suportados. Corrigido com hex inline no preview." },
+    { title:"RLS Recursão", severity:"✅ Baixo", desc:"Profile policy causava loop. Simplificado para 2 usuários." },
+    { title:"Sem backups", severity:"🔴 Alto", desc:"Estratégia de backup do Supabase não verificada." },
+    { title:"Sem testes", severity:"⚠️ Médio", desc:"Vitest configurado mas nenhum teste escrito." }
+  ]
+};
+
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  DATA.components.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'card ' + c.type;
+    card.onclick = () => showDetail(c);
+    card.innerHTML = '<h3>' + c.name + '</h3><div class="meta">' + c.type + ' • ' + c.source.split(',')[0] + '</div><p>' + c.desc.substring(0,100) + '…</p>';
+    grid.appendChild(card);
+  });
+}
+
+function showDetail(c) {
+  const d = document.getElementById('detail');
+  d.className = 'detail-panel active';
+  d.innerHTML = '<h2>' + c.name + '</h2><div class="source">📁 ' + c.source + '</div><p>' + c.desc + '</p><div class="connections"><strong>Conexões:</strong>' + c.conns.map(cc => '<div class="conn"><span class="arrow">→</span> ' + cc + '</div>').join('') + '</div>';
+  d.scrollIntoView({behavior:'smooth'});
+}
+
+function renderFlows() {
+  const el = document.getElementById('flows');
+  DATA.flows.forEach(f => {
+    const box = document.createElement('div');
+    box.className = 'chart-box';
+    box.innerHTML = '<h3>' + f.title + '</h3>' + f.steps.map((s,i) => '<div class="flow-row"><span class="box">' + s + '</span>' + (i < f.steps.length-1 ? '<span class="arrow-char">→</span>' : '') + '</div>').join('');
+    el.appendChild(box);
+  });
+}
+
+function renderRisks() {
+  const el = document.getElementById('risks');
+  DATA.risks.forEach(r => {
+    const box = document.createElement('div');
+    box.className = 'chart-box';
+    box.innerHTML = '<strong>' + r.severity + ' ' + r.title + '</strong><p style="font-size:0.8rem;color:#94a3b8;margin-top:4px">' + r.desc + '</p>';
+    el.appendChild(box);
+  });
+}
+
+renderGrid();
+renderFlows();
+renderRisks();
+</script>
+</body>
+</html>

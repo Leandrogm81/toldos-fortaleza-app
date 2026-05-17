@@ -1,0 +1,396 @@
+{
+  "project": "Toldos Fortaleza App",
+  "description": "Sistema interno de gestão operacional para empresa de toldos e coberturas (Santo André/SP)",
+  "stack": {
+    "framework": "Next.js 16.2.6 (App Router)",
+    "ui": "React 19.2 + Tailwind CSS v4 + shadcn/ui",
+    "language": "TypeScript 5 (strict)",
+    "database": "Supabase (PostgreSQL + Auth + RLS)",
+    "hosting": "Vercel",
+    "key_libraries": [
+      "html2canvas 1.4.1 (PDF generation)",
+      "jspdf 4.2.1 (PDF download)",
+      "react-day-picker 9.6.1 (calendar widget)",
+      "react-big-calendar 1.19.4 (installed, not in use)",
+      "recharts 3.8.1 (charts, installed, not in use)",
+      "zustand 5.0 (installed, not in use)",
+      "sonner 2.0 (toasts, installed, not in use)",
+      "zod 4.4 (validation, installed, used minimally)"
+    ]
+  },
+  "components": [
+    {
+      "id": "comp-auth",
+      "name": "Auth Layer",
+      "source": "src/lib/auth.ts, src/middleware.ts, src/app/login/page.tsx",
+      "description": "Autenticação via Supabase Auth (email/senha). Estado global simples com listeners. Middleware protege rotas exceto /login e /orcamento/*.",
+      "confidence": "high",
+      "type": "infrastructure"
+    },
+    {
+      "id": "comp-sidebar",
+      "name": "Sidebar Navigation",
+      "source": "src/components/layout/Sidebar.tsx",
+      "description": "Menu lateral com links para Dashboard, Pedidos, Orçamentos, Agendamentos, Clientes. Responsivo com hamburger mobile.",
+      "confidence": "high",
+      "type": "layout"
+    },
+    {
+      "id": "comp-header",
+      "name": "Header Bar",
+      "source": "src/components/layout/Header.tsx",
+      "description": "Barra superior com nome do usuário, avatar, botão de logout e toggle de tema escuro/claro.",
+      "confidence": "high",
+      "type": "layout"
+    },
+    {
+      "id": "comp-pedido-form",
+      "name": "PedidoForm (Order Form)",
+      "source": "src/components/pedido/PedidoForm.tsx",
+      "description": "Formulário completo de pedido portado 1:1 do app Vite legado (App.tsx, 1298 linhas). Seções: logo, data, contratante com ClienteBusca, produtos dinâmicos, valor/pagamento/parcelas, prazo de entrega, assinaturas. Aceita prop mode='pedido'|'orcamento'.",
+      "confidence": "high",
+      "type": "domain"
+    },
+    {
+      "id": "comp-pedido-preview",
+      "name": "PedidoPreview (Document Preview)",
+      "source": "src/components/pedido/PedidoPreview.tsx",
+      "description": "Preview do documento A4 (PEDIDO DE COMPRA ou ORÇAMENTO). Usa estilos inline com cores hex para compatibilidade com html2canvas (Tailwind v4 usa lab/oklch que o html2canvas não entende). Campos vazios não são renderizados.",
+      "confidence": "high",
+      "type": "domain"
+    },
+    {
+      "id": "comp-signature",
+      "name": "SignaturePad + SignatureModal",
+      "source": "src/components/pedido/SignaturePad.tsx",
+      "description": "Canvas de assinatura digital com suporte a mouse e touch. Modal com opção 'Salvar no perfil' para reutilização automática. High DPI (devicePixelRatio).",
+      "confidence": "high",
+      "type": "domain"
+    },
+    {
+      "id": "comp-cliente-form",
+      "name": "ClienteForm",
+      "source": "src/components/cliente/ClienteForm.tsx",
+      "description": "Formulário de cadastro de cliente com máscaras (CPF, CNPJ, telefone, CEP) e autocomplete de endereço via ViaCEP. Toggle PF/PJ.",
+      "confidence": "high",
+      "type": "domain"
+    },
+    {
+      "id": "comp-cliente-busca",
+      "name": "ClienteBusca (Autocomplete)",
+      "source": "src/components/cliente/ClienteBusca.tsx",
+      "description": "Input com dropdown de busca de clientes existentes no Supabase. Debounce 300ms, navegação por teclado. Ao selecionar, preenche todos os campos do formulário de pedido/orçamento.",
+      "confidence": "high",
+      "type": "domain"
+    },
+    {
+      "id": "comp-agendamentos",
+      "name": "Agendamentos Page",
+      "source": "src/app/(auth)/agendamentos/page.tsx",
+      "description": "Página com duas abas: 'Calendário' (agendamentos de hoje, futuros, concluídos) e 'Prazos' (tabela de pedidos com prazo vencido/próximo). CRUD completo de agendamentos com modal. Tipos: visita_medicao, instalacao, reparo, pos_venda, outro. Notificações push nativas para prazos críticos.",
+      "confidence": "high",
+      "type": "domain"
+    },
+    {
+      "id": "comp-dashboard",
+      "name": "Dashboard",
+      "source": "src/app/(auth)/dashboard/page.tsx",
+      "description": "Home page com cards KPI (pedidos do mês, orçamentos pendentes, agenda da semana, clientes, faturamento), botões de ação rápida e lista de documentos recentes.",
+      "confidence": "high",
+      "type": "presentation"
+    },
+    {
+      "id": "comp-pwa",
+      "name": "PWA Layer",
+      "source": "src/components/layout/PwaRegister.tsx, src/components/layout/InstallPrompt.tsx, public/sw.js, public/manifest.json",
+      "description": "Progressive Web App: service worker com cache, install prompt no Android Chrome, meta tags iOS para tela cheia (Safari). Ícones 192px e 512px com logo em fundo azul.",
+      "confidence": "high",
+      "type": "infrastructure"
+    },
+    {
+      "id": "comp-theme",
+      "name": "Theme Toggle (Dark Mode)",
+      "source": "src/components/layout/ThemeToggle.tsx, src/app/globals.css",
+      "description": "Botão sol/lua que alterna modo escuro. Preferência salva em localStorage. Classes dark: aplicadas via document.documentElement.classList.toggle.",
+      "confidence": "high",
+      "type": "presentation"
+    }
+  ],
+  "data_entities": [
+    {
+      "name": "profile",
+      "source": "supabase/migration.sql, src/lib/auth.ts",
+      "extends": "auth.users",
+      "fields": ["name", "role (admin|user)", "phone", "logo_data_url (base64)", "company_signature_data_url (base64)"],
+      "policies": "select_all + update_all for authenticated users"
+    },
+    {
+      "name": "client",
+      "source": "supabase/migration.sql",
+      "fields": ["name", "doc_type (pf|pj)", "cpf", "rg", "cnpj", "ie", "phone", "cep", "address", "neighborhood", "city", "notes"],
+      "policies": "CRUD for authenticated users"
+    },
+    {
+      "name": "document",
+      "source": "supabase/migration.sql",
+      "description": "Tabela unificada para pedidos e orçamentos. Usa doc_data JSONB para armazenar o formulário completo.",
+      "fields": ["type (pedido|orcamento)", "status", "client_id", "date", "doc_data (JSONB)", "signature_data_url", "company_signature_data_url", "logo_data_url", "public_token (unique)", "total_value"],
+      "policies": "CRUD for authenticated users"
+    },
+    {
+      "name": "appointment",
+      "source": "supabase/migration.sql",
+      "fields": ["title", "type (visita_medicao|instalacao|reparo|pos_venda|outro)", "client_id", "document_id", "scheduled_at", "duration_min", "status", "address_json", "notes"],
+      "policies": "CRUD for authenticated users"
+    },
+    {
+      "name": "attachment",
+      "source": "supabase/migration.sql",
+      "description": "Tabela para fotos e documentos (schema criado, sem UI implementada)",
+      "fields": ["document_id", "type (foto_medicao|foto_instalacao|documento)", "storage_path", "description"],
+      "policies": "SELECT + INSERT for authenticated users"
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn-auth-flow",
+      "from": "Login Page",
+      "to": "Supabase Auth",
+      "direction": "bidirectional",
+      "description": "Login envia credenciais para Supabase Auth. Sessão persiste em cookies gerenciados pelo middleware.",
+      "source": "src/app/login/page.tsx, src/middleware.ts",
+      "confidence": "high"
+    },
+    {
+      "id": "conn-form-to-db",
+      "from": "PedidoForm / OrcamentoForm",
+      "to": "Supabase document table",
+      "direction": "unidirectional",
+      "description": "Ao salvar, o formData inteiro é serializado como JSONB no campo doc_data. Logo e assinaturas são data URLs.",
+      "source": "src/app/(auth)/pedidos/novo/page.tsx (handleSave), src/app/(auth)/orcamentos/novo/page.tsx (handleSave)",
+      "confidence": "high"
+    },
+    {
+      "id": "conn-cliente-auto",
+      "from": "NovoPedidoPage (handleSave)",
+      "to": "Supabase client table",
+      "direction": "unidirectional",
+      "description": "Ao salvar pedido, upsertClientFromForm verifica se cliente existe (nome+telefone). Se não, cria automaticamente. Orçamentos NÃO salvam cliente automaticamente.",
+      "source": "src/lib/utils/cliente-sync.ts, src/app/(auth)/pedidos/novo/page.tsx",
+      "confidence": "high"
+    },
+    {
+      "id": "conn-busca-cliente",
+      "from": "ClienteBusca",
+      "to": "Supabase client table",
+      "direction": "unidirectional",
+      "description": "Busca ILIKE por nome ou telefone. Ao selecionar, callback preenche todos os campos do formulário.",
+      "source": "src/components/cliente/ClienteBusca.tsx, src/components/pedido/PedidoForm.tsx (handleClientSelect)",
+      "confidence": "high"
+    },
+    {
+      "id": "conn-pdf",
+      "from": "PedidoPreview (#print-area)",
+      "to": "html2canvas + jsPDF",
+      "direction": "unidirectional",
+      "description": "html2canvas captura o elemento #print-area (clonado offscreen), jsPDF gera PDF A4 com margens de 8mm. Download automático.",
+      "source": "src/lib/utils/pdf.ts",
+      "confidence": "high"
+    },
+    {
+      "id": "conn-public-link",
+      "from": "OrcamentoNovoPage (save)",
+      "to": "OrcamentoPublicoPage (/orcamento/[token])",
+      "direction": "unidirectional",
+      "description": "Ao salvar orçamento, gera public_token (UUID 8 chars). Link copiado para clipboard. Página pública usa service_role key para bypassar RLS. Cliente pode aprovar sem login.",
+      "source": "src/app/(auth)/orcamentos/novo/page.tsx, src/app/orcamento/[token]/page.tsx",
+      "confidence": "high"
+    },
+    {
+      "id": "conn-deadlines",
+      "from": "AgendamentosPage",
+      "to": "document table",
+      "direction": "unidirectional",
+      "description": "Ao carregar agendamentos, também busca pedidos com deliveryTime. Calcula prazo: data_pedido + dias = deadline. Classifica como vencido/hoje/amanhã/3dias/7dias. Dispara Notification API se vencidos.",
+      "source": "src/app/(auth)/agendamentos/page.tsx",
+      "confidence": "high"
+    },
+    {
+      "id": "conn-rls-bypass",
+      "from": "OrcamentoPublicoPage",
+      "to": "Supabase (service_role)",
+      "direction": "unidirectional",
+      "description": "Página pública usa SUPABASE_SERVICE_ROLE_KEY para ler documentos sem autenticação. RLS normalmente bloquearia leitura anônima.",
+      "source": "src/app/orcamento/[token]/page.tsx",
+      "confidence": "high",
+      "risk": "service_role key exposta em server component - aceitável pois nunca chega ao cliente"
+    },
+    {
+      "id": "conn-perfil-persist",
+      "from": "SignatureModal (checkbox 'Salvar no perfil')",
+      "to": "profile table (company_signature_data_url)",
+      "direction": "unidirectional",
+      "description": "Assinatura do contratado salva no perfil. Carregada automaticamente ao abrir novo pedido.",
+      "source": "src/components/pedido/SignaturePad.tsx, src/app/(auth)/pedidos/novo/page.tsx (useEffect loadProfile)",
+      "confidence": "high"
+    }
+  ],
+  "routes": [
+    { "path": "/", "redirects_to": "/dashboard", "auth": "required" },
+    { "path": "/login", "description": "Login page", "auth": "public" },
+    { "path": "/dashboard", "description": "Dashboard with KPIs", "auth": "required" },
+    { "path": "/pedidos", "description": "Orders list", "auth": "required" },
+    { "path": "/pedidos/novo", "description": "New order form + preview", "auth": "required" },
+    { "path": "/pedidos/[id]", "description": "Edit existing order", "auth": "required" },
+    { "path": "/orcamentos", "description": "Quotes list", "auth": "required" },
+    { "path": "/orcamentos/novo", "description": "New quote form + preview", "auth": "required" },
+    { "path": "/orcamentos/[id]", "description": "Edit existing quote", "auth": "required" },
+    { "path": "/orcamento/[token]", "description": "Public quote view/approval (no auth)", "auth": "public" },
+    { "path": "/agendamentos", "description": "Calendar + deadline tracking", "auth": "required" },
+    { "path": "/clientes", "description": "Client list", "auth": "required" },
+    { "path": "/clientes/novo", "description": "New client form", "auth": "required" },
+    { "path": "/clientes/[id]", "description": "Client detail + history", "auth": "required" }
+  ],
+  "data_flows": [
+    {
+      "name": "Pedido Creation Flow",
+      "steps": [
+        "Usuário navega para /pedidos/novo",
+        "AuthLayout carrega sessão e perfil (logo + assinatura padrão)",
+        "Usuário preenche contratante (digita ou seleciona cliente existente via ClienteBusca)",
+        "Adiciona produtos, valor, pagamento, prazo",
+        "Opcional: coleta assinatura digital (canvas)",
+        "Clica 'Salvar Pedido'",
+        "upsertClientFromForm salva/cria cliente no banco",
+        "FormData é serializado como JSONB no campo doc_data",
+        "Documento é inserido na tabela document com type='pedido' e client_id vinculado",
+        "Clica 'PDF' → html2canvas captura #print-area → jsPDF gera download"
+      ],
+      "source": "src/app/(auth)/pedidos/novo/page.tsx"
+    },
+    {
+      "name": "Orçamento → Pedido Pipeline",
+      "steps": [
+        "Usuário cria orçamento em /orcamentos/novo (reusa PedidoForm com mode='orcamento')",
+        "Salva → gera public_token → copia link público",
+        "Compartilha link com cliente via WhatsApp",
+        "Cliente acessa /orcamento/[token] (público, sem login)",
+        "Cliente clica 'Aprovar Orçamento' → status muda para 'aprovado'",
+        "Usuário abre orçamento no app, clica 'Converter em Pedido'",
+        "Novo documento type='pedido' é criado com mesmos dados",
+        "Orçamento original permanece como histórico"
+      ],
+      "source": "src/app/(auth)/orcamentos/novo/page.tsx, src/app/orcamento/[token]/page.tsx"
+    },
+    {
+      "name": "Deadline Tracking Flow",
+      "steps": [
+        "AgendamentosPage carrega todos os pedidos com deliveryTime",
+        "Para cada pedido, calcula deadline = data_pedido + dias_prazo",
+        "Classifica: vencido (<0 dias), hoje (0), amanhã (1), 3dias (≤3), 7dias (≤7), ok",
+        "Renderiza tabela colorida na aba 'Prazos'",
+        "Se houver vencidos/críticos e permissão concedida, dispara Notification API"
+      ],
+      "source": "src/app/(auth)/agendamentos/page.tsx"
+    }
+  ],
+  "risks": [
+    {
+      "id": "risk-jsonb",
+      "description": "doc_data como JSONB é flexível mas dificulta queries agregadas. Para relatórios de faturamento, o campo total_value foi adicionado como coluna separada, mas depende de parsing manual no código.",
+      "severity": "medium",
+      "mitigation": "Manter total_value atualizado no save. Para queries complexas, considerar views materializadas no futuro."
+    },
+    {
+      "id": "risk-rls-recursion",
+      "description": "Política RLS original da tabela profile causava recursão infinita (admin check consultava a própria tabela). Corrigido com política simplificada (todos autenticados veem tudo).",
+      "severity": "low",
+      "mitigation": "Apenas 2 usuários, sem dados sensíveis entre eles. Se crescer, reavaliar RLS."
+    },
+    {
+      "id": "risk-html2canvas",
+      "description": "Tailwind v4 usa cores lab/oklch que html2canvas não entende. Corrigido usando estilos inline com cores hex no PedidoPreview.",
+      "severity": "low",
+      "mitigation": "Manter estilos hex no #print-area. Se mudar o preview, testar PDF imediatamente."
+    },
+    {
+      "id": "risk-pwa-ios",
+      "description": "iOS Safari não suporta push notifications via service worker, nem install prompt automático. Cache limitado a 50MB.",
+      "severity": "medium",
+      "mitigation": "Instruir usuários iOS a instalar via menu Compartilhar. Para notificações, considerar email/SMS como fallback."
+    },
+    {
+      "id": "risk-service-role-leak",
+      "description": "SUPABASE_SERVICE_ROLE_KEY é usada em server components para bypassar RLS. Se acidentalmente exportada para cliente, comprometeria todo o banco.",
+      "severity": "high",
+      "mitigation": "A chave está em .env.local e Vercel env vars (não NEXT_PUBLIC_). Nunca importar em 'use client' components. Revisar em code review."
+    },
+    {
+      "id": "risk-single-table",
+      "description": "Pedidos e orçamentos compartilham a tabela document. Se divergirem muito no futuro, a migração será complexa.",
+      "severity": "low",
+      "mitigation": "Monitorar divergência de campos. Por enquanto, 90% dos campos são idênticos e o JSONB absorve diferenças."
+    },
+    {
+      "id": "risk-vercel-limits",
+      "description": "Vercel free tier limita serverless functions (10s timeout, 1MB payload). PDFs grandes ou muitas queries podem estourar.",
+      "severity": "low",
+      "mitigation": "PDF é gerado client-side (html2canvas). Queries Supabase são leves. Monitorar logs da Vercel."
+    }
+  ],
+  "unknowns": [
+    {
+      "id": "unk-whatsapp",
+      "description": "Integração com WhatsApp Business API foi mencionada mas não implementada. Atualmente o compartilhamento gera link manual.",
+      "impact": "low",
+      "action": "Se necessário, implementar API do Meta WhatsApp Cloud para envio automático de orçamentos e lembretes."
+    },
+    {
+      "id": "unk-photos",
+      "description": "Tabela attachment existe no schema mas não há UI para upload de fotos de medição/instalação.",
+      "impact": "medium",
+      "action": "Planejar feature de fotos no pedido: upload via câmera PWA, compressão, galeria antes/depois."
+    },
+    {
+      "id": "unk-backups",
+      "description": "Não há estratégia de backup do Supabase. O plano free inclui backups automáticos, mas não foram verificados.",
+      "impact": "high",
+      "action": "Verificar painel Supabase → Database → Backups. Configurar pg_dump semanal se necessário."
+    },
+    {
+      "id": "unk-tests",
+      "description": "Nenhum teste automatizado (unitário, integração, E2E). Vitest configurado mas sem testes escritos.",
+      "impact": "medium",
+      "action": "Priorizar testes para as funções de formatação (format.ts) e cálculo de prazos (agendamentos)."
+    },
+    {
+      "id": "unk-unused-deps",
+      "description": "Bibliotecas instaladas mas não utilizadas: react-big-calendar, zustand, sonner, recharts (dashboard não usa gráficos ainda).",
+      "impact": "low",
+      "action": "Avaliar remoção para reduzir bundle size ou implementar features que as utilizem."
+    },
+    {
+      "id": "unk-multi-tenant",
+      "description": "Sistema foi projetado para 2 usuários (Leandro + esposa). Se expandir para mais funcionários, RBAC precisará ser revisto.",
+      "impact": "medium",
+      "action": "Se contratar mais pessoas, implementar roles mais granulares (vendedor vs instalador vs admin)."
+    }
+  ],
+  "observations_vs_inferences": {
+    "observed": [
+      "PedidoForm foi portado 1:1 do app Vite legado (Gerador-de-pedido/App.tsx) — fonte: src/components/pedido/PedidoForm.tsx",
+      "PedidoPreview usa estilos inline hex, não classes Tailwind — fonte: src/components/pedido/PedidoPreview.tsx",
+      "doc_data é JSONB — fonte: supabase/migration.sql (campo 'doc_data JSONB NOT NULL')",
+      "Autenticação usa Supabase Auth com email/senha — fonte: src/app/login/page.tsx",
+      "Middleware bloqueia rotas exceto /login e /orcamento/ — fonte: src/middleware.ts",
+      "Página pública de orçamento usa service_role key — fonte: src/app/orcamento/[token]/page.tsx",
+      "Cliente é salvo automaticamente ao criar pedido, não orçamento — fonte: src/app/(auth)/pedidos/novo/page.tsx (handleSave)"
+    ],
+    "inferred": [
+      "Usuário prefere portar em vez de reescrever (app legado foi mantido como base) — inferido da estrutura do projeto e conversa",
+      "O negócio opera majoritariamente por WhatsApp (telefone é campo principal, não email) — inferido do fluxo de orçamento com link público",
+      "Prioridade é simplicidade sobre arquitetura (JSONB em vez de tabelas normalizadas, RLS simplificado) — inferido das escolhas de design",
+      "Mobile é importante (PWA foi priorizado no Sprint 7) — inferido das features de assinatura touch e câmera"
+    ]
+  }
+}

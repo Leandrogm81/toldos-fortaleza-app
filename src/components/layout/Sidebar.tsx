@@ -83,7 +83,7 @@ export function Sidebar() {
       {/* Sidebar */}
       <aside
         className={`
-          fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800
+          fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200
           transform transition-transform duration-200 ease-in-out
           ${open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           flex flex-col
