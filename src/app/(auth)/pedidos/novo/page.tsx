@@ -21,7 +21,7 @@ export default function NovoPedidoPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [currentOrderId, setCurrentOrderId] = useState<string | null>(null)
   const [actionsMenuOpen, setActionsMenuOpen] = useState(false)
-  const [actionsMenuRef] = useState(() => useRef<HTMLDivElement>(null))
+  const actionsMenuRef = useRef<HTMLDivElement>(null)
 
   // Close actions menu on click outside
   useEffect(() => {
