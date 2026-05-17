@@ -34,15 +34,18 @@ export default function NovoPedidoPage() {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  // Load logo from profile on mount
+  // Load logo and signature from profile on mount
   useEffect(() => {
     const loadProfile = async () => {
       try {
         const supabase = createClient()
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return
-        const { data } = await supabase.from('profile').select('logo_data_url').eq('id', user.id).single()
+        const { data } = await supabase.from('profile').select('logo_data_url, company_signature_data_url').eq('id', user.id).single()
         if (data?.logo_data_url) setLogoSrc(data.logo_data_url)
+        if (data?.company_signature_data_url) {
+          setFormData((prev) => ({ ...prev, companySignatureDataUrl: data.company_signature_data_url! }))
+        }
       } catch {}
     }
     loadProfile()

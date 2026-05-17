@@ -15,6 +15,8 @@ export default function ClienteDetailPage() {
   const [loading, setLoading] = useState(true)
   const [docCount, setDocCount] = useState(0)
   const [apptCount, setApptCount] = useState(0)
+  const [documents, setDocuments] = useState<any[]>([])
+  const [appointments, setAppointments] = useState<any[]>([])
 
   useEffect(() => {
     loadData()
@@ -31,6 +33,11 @@ export default function ClienteDetailPage() {
       const { count: appts } = await supabase.from('appointment').select('*', { count: 'exact', head: true }).eq('client_id', id)
       setDocCount(docs || 0)
       setApptCount(appts || 0)
+      // Load actual documents and appointments
+      const { data: documents } = await supabase.from('document').select('*').eq('client_id', id).order('created_at', { ascending: false }).limit(20)
+      const { data: appointments } = await supabase.from('appointment').select('*').eq('client_id', id).order('scheduled_at', { ascending: true }).limit(10)
+      setDocuments(documents || [])
+      setAppointments(appointments || [])
     }
     setLoading(false)
   }
@@ -233,15 +240,59 @@ export default function ClienteDetailPage() {
         </div>
       </div>
 
-      {/* Histórico Placeholder */}
+      {/* Histórico */}
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Histórico</h2>
-        {docCount === 0 && apptCount === 0 ? (
-          <p className="text-sm text-gray-400 text-center py-8">
+        
+        {/* Documentos */}
+        <h3 className="text-sm font-semibold text-gray-600 mb-2">Pedidos e Orçamentos</h3>
+        {documents.length === 0 ? (
+          <p className="text-sm text-gray-400 py-2">Nenhum documento encontrado.</p>
+        ) : (
+          <div className="space-y-2 mb-4">
+            {documents.map((doc: any) => (
+              <Link key={doc.id} href={`/${doc.type === 'pedido' ? 'pedidos' : 'orcamentos'}/${doc.id}`}
+                className="flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-sky-300 hover:bg-sky-50 transition-colors">
+                <div>
+                  <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium mr-2 ${doc.type === 'pedido' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
+                    {doc.type === 'pedido' ? 'Pedido' : 'Orçamento'}
+                  </span>
+                  <span className="text-sm font-medium text-gray-900">{doc.date}</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <span className="text-gray-500">{doc.doc_data?.productValue || ''}</span>
+                  <span className={`px-2 py-0.5 rounded text-xs ${doc.status === 'pago' ? 'bg-green-100 text-green-700' : doc.status === 'aprovado' ? 'bg-green-50 text-green-600' : doc.status === 'cancelado' ? 'bg-red-50 text-red-600' : 'bg-gray-100 text-gray-600'}`}>{doc.status}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {/* Agendamentos */}
+        <h3 className="text-sm font-semibold text-gray-600 mb-2">Agendamentos</h3>
+        {appointments.length === 0 ? (
+          <p className="text-sm text-gray-400 py-2">Nenhum agendamento.</p>
+        ) : (
+          <div className="space-y-1">
+            {appointments.map((a: any) => (
+              <div key={a.id} className="text-sm flex justify-between py-2 border-b border-gray-100 last:border-0">
+                <div>
+                  <span className="font-medium text-gray-900">{a.title}</span>
+                  <span className="text-xs text-gray-500 ml-2">{a.type}</span>
+                </div>
+                <span className="text-xs text-gray-500">
+                  {new Date(a.scheduled_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                  <span className={`ml-2 px-1.5 py-0.5 rounded text-[10px] ${a.status === 'concluido' ? 'bg-green-100 text-green-700' : a.status === 'cancelado' ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-700'}`}>{a.status}</span>
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {documents.length === 0 && appointments.length === 0 && (
+          <p className="text-sm text-gray-400 text-center py-6">
             Nenhum pedido, orçamento ou agendamento para este cliente ainda.
           </p>
-        ) : (
-          <p className="text-sm text-gray-500">Os pedidos e agendamentos aparecerão aqui nos próximos sprints.</p>
         )}
       </div>
     </div>

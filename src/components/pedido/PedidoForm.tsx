@@ -4,8 +4,10 @@ import { useState, useCallback, useEffect } from 'react'
 import { formatCpf, formatCnpj, formatPhone, formatCep, formatDate, formatCurrency } from '@/lib/utils/format'
 import { fetchAddressByCep } from '@/lib/utils/cep'
 import { SignaturePad, SignatureModal } from './SignaturePad'
+import { ClienteBusca } from '@/components/cliente/ClienteBusca'
 import type { PedidoFormData, Product } from '@/types/pedido'
 import { initialPedidoData, initialProduct } from '@/types/pedido'
+import type { Client } from '@/types/client'
 
 interface PedidoFormProps {
   data: PedidoFormData
@@ -16,9 +18,10 @@ interface PedidoFormProps {
   mode?: 'pedido' | 'orcamento'
   validade?: string
   onValidadeChange?: (val: string) => void
+  onClientSelect?: (client: Client) => void
 }
 
-export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo, mode = 'pedido', validade, onValidadeChange }: PedidoFormProps) {
+export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo, mode = 'pedido', validade, onValidadeChange, onClientSelect }: PedidoFormProps) {
   const [clientType, setClientType] = useState<'pf' | 'pj'>('pf')
   const [paymentOption, setPaymentOption] = useState<'avista' | 'parcelado' | 'personalizado'>('avista')
   const [installments, setInstallments] = useState(2)
@@ -167,6 +170,24 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
     return `${year}-${month}-${day}`
   }
 
+  const handleClientSelect = (client: Client) => {
+    onClientSelect?.(client)
+    setClientType(client.doc_type)
+    onChange({
+      ...data,
+      clientName: client.name,
+      clientPhone: client.phone || '',
+      clientCep: client.cep || '',
+      clientAddress: client.address || '',
+      clientNeighborhood: client.neighborhood || '',
+      clientCity: client.city || '',
+      clientCpf: client.cpf || '',
+      clientRg: client.rg || '',
+      clientCnpj: client.cnpj || '',
+      clientIe: client.ie || '',
+    })
+  }
+
   return (
     <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
       {/* Logo */}
@@ -238,8 +259,13 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
           </div>
 
           <div>
-            <label htmlFor="clientName" className="block text-sm font-medium text-gray-700 mb-1">Nome Completo / Razão Social</label>
-            <input id="clientName" name="clientName" type="text" value={data.clientName} onChange={handleInputChange} placeholder="Ex: Lygia Barros Fagundes / Toldos Fortaleza" className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" />
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nome Completo / Razão Social</label>
+            <ClienteBusca
+              onSelect={handleClientSelect}
+              value={data.clientName}
+              onChange={(val) => onChange({ ...data, clientName: val })}
+              placeholder="Digite para buscar cliente ou cadastrar novo..."
+            />
           </div>
 
           <div>
