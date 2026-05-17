@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { PedidoForm } from '@/components/pedido/PedidoForm'
 import { PedidoPreview } from '@/components/pedido/PedidoPreview'
-import { printPDF, downloadTxtContent } from '@/lib/utils/pdf'
+import { generatePDF, downloadTxtContent } from '@/lib/utils/pdf'
 import { initialPedidoData } from '@/types/pedido'
 import type { PedidoFormData } from '@/types/pedido'
 import Link from 'next/link'
@@ -59,7 +59,7 @@ export default function EditarPedidoPage() {
     setIsPrinting(true)
     try {
       const clientName = formData.clientName.replace(/\s+/g, '_') || 'pedido'
-      printPDF()
+      await generatePDF('print-area', `pedido-${clientName}.pdf`)
     } catch { } finally {
       setIsPrinting(false)
     }

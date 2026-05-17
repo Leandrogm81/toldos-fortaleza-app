@@ -17,46 +17,41 @@ export function PedidoPreview({
   validade?: string
 }) {
   return (
-    <div id="print-area" className="w-full mx-auto bg-white shadow-2xl p-6 sm:p-12 border border-gray-300 font-sans text-sm text-gray-800">
-      <header className="text-center mb-10">
+    <div id="print-area" className="w-full mx-auto bg-white shadow-2xl p-4 sm:p-6 border border-gray-300 font-sans text-xs text-gray-800">
+      <header className="text-center mb-4">
         {/* Logo */}
         {logoSrc ? (
-          <img src={logoSrc} alt="Company Logo" className="h-32 w-auto mx-auto mb-2 object-contain" />
+          <img src={logoSrc} alt="Logo" className="h-16 w-auto mx-auto object-contain" />
         ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" className="h-28 w-auto mx-auto mb-2 text-sky-800">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" className="h-12 w-auto mx-auto text-sky-800">
             <path d="M35 2 H 5 V 38 H 35 V 28 H 20 V 12 H 35 V 2 Z" stroke="currentColor" strokeWidth="3" fill="none" strokeLinejoin="round" />
           </svg>
         )}
-        <h1 className="text-2xl font-bold text-gray-800">{EMPRESA.fantasia}</h1>
-        <p className="text-base text-gray-500">Coberturas em Policarbonato</p>
-        <h2 className="text-xl font-bold tracking-widest mt-8">
+        <h2 className="text-base font-bold tracking-widest mt-2">
           {mode === 'orcamento' ? 'ORÇAMENTO' : 'PEDIDO DE COMPRA'}
         </h2>
         {mode === 'orcamento' && validade && (
-          <p className="text-sm text-gray-600 mt-2">Orçamento válido até: {validade}</p>
+          <p className="text-xs text-gray-600 mt-1">Validade: {validade}</p>
         )}
       </header>
 
       <main>
-        <p className="mb-8">Data: {data.date}</p>
+        <p className="mb-3">Data: {data.date}</p>
 
         {/* Contratado */}
-        <section className="mb-6">
-          <h3 className="font-bold text-base text-sky-700 border-b-2 border-sky-700 pb-1 mb-3">Contratado</h3>
-          <div className="space-y-px">
+        <section className="mb-3">
+          <h3 className="font-bold text-xs text-sky-700 border-b border-sky-700 pb-0.5 mb-1.5">Contratado</h3>
+          <div className="space-y-px text-xs">
             <p>{EMPRESA.nome}</p>
-            <p>Endereço: {EMPRESA.endereco}</p>
-            <p>Bairro: {EMPRESA.bairro} – {EMPRESA.cidade} CEP: {EMPRESA.cep}</p>
-            <p>Telefone: {EMPRESA.telefone} / Fixo e WhatsApp</p>
-            <p>CNPJ: {EMPRESA.cnpj} / Inscrição Estadual: {EMPRESA.ie}</p>
-            <p>Site: {EMPRESA.site} / E-mail: {EMPRESA.email}</p>
+            <p>{EMPRESA.endereco} – {EMPRESA.bairro} – {EMPRESA.cidade} CEP: {EMPRESA.cep}</p>
+            <p>Tel: {EMPRESA.telefone} | CNPJ: {EMPRESA.cnpj} | IE: {EMPRESA.ie}</p>
           </div>
         </section>
 
         {/* Contratante */}
-        <section className="mb-6">
-          <h3 className="font-bold text-base text-sky-700 border-b-2 border-sky-700 pb-1 mb-3">Contratante</h3>
-          <div className="space-y-px">
+        <section className="mb-3">
+          <h3 className="font-bold text-xs text-sky-700 border-b border-sky-700 pb-0.5 mb-1.5">Contratante</h3>
+          <div className="space-y-px text-xs">
             {data.clientName && <p>Nome: {data.clientName}</p>}
             {data.clientAddress && <p>Endereço: {data.clientAddress}</p>}
             {data.clientNeighborhood && <p>Bairro: {data.clientNeighborhood}</p>}
@@ -64,7 +59,7 @@ export function PedidoPreview({
             {data.clientPhone && <p>Telefone: {data.clientPhone}</p>}
             {data.clientCnpj ? (
               <>
-                {data.clientCnpj && <p>CNPJ: {data.clientCnpj}{data.clientIe ? ` / Inscrição Estadual: ${data.clientIe}` : ''}</p>}
+                {data.clientCnpj && <p>CNPJ: {data.clientCnpj}{data.clientIe ? ` / IE: ${data.clientIe}` : ''}</p>}
               </>
             ) : (
               <>
@@ -76,10 +71,10 @@ export function PedidoPreview({
         </section>
 
         {/* Produtos */}
-        <section className="mb-6">
-          <h3 className="font-bold text-base text-sky-700 border-b-2 border-sky-700 pb-1 mb-3">Produto(s)</h3>
+        <section className="mb-3">
+          <h3 className="font-bold text-xs text-sky-700 border-b border-sky-700 pb-0.5 mb-1.5">Produto(s)</h3>
           {data.products.map((product, index) => (
-            <div key={index} className={`space-y-px ${index < data.products.length - 1 ? 'mb-3 pb-3 border-b border-gray-200' : ''}`}>
+            <div key={index} className={`space-y-px text-xs ${index < data.products.length - 1 ? 'mb-1.5 pb-1.5 border-b border-gray-200' : ''}`}>
               {product.item && <p><span className="font-semibold">Item {index + 1}:</span> {product.item}</p>}
               {product.structure && <p><span className="font-semibold">Estrutura:</span> {product.structure}</p>}
               {product.material && <p><span className="font-semibold">Material:</span> {product.material}</p>}
@@ -90,64 +85,58 @@ export function PedidoPreview({
         </section>
 
         {/* Valor e Pagamento */}
-        <section className="space-y-2 text-sm my-8">
+        <section className="space-y-1.5 text-xs my-4">
           {data.productValue && (
-            <div className="border border-black p-2">
+            <div className="border border-black p-1.5">
               Valor R$ {data.productValue.replace('R$', '').trim()} – {data.productValueText}
             </div>
           )}
-          <div className="border border-black p-2">
+          <div className="border border-black p-1.5">
             Forma de pagamento: {data.paymentMethod || 'A combinar'}
           </div>
-          <div className="border border-black p-2">
-            Dados Bancários: {EMPRESA.banco} / Pix: {EMPRESA.pix}
+          <div className="border border-black p-1.5">
+            {EMPRESA.banco} / Pix: {EMPRESA.pix}
           </div>
         </section>
 
         {/* Prazo */}
-        <section className="space-y-px text-sm">
+        <section className="space-y-px text-xs">
           {data.deliveryTime && <p>Prazo de Entrega: {data.deliveryTime}</p>}
           <p>Garantia: {EMPRESA.garantia}</p>
         </section>
       </main>
 
       {/* Assinaturas */}
-      <section className="mt-20 flex flex-wrap justify-around items-start gap-x-8 gap-y-12">
-        <div className="text-center w-72">
-          <div className="h-20 flex items-end justify-center pb-1">
+      <section className="mt-10 flex flex-wrap justify-around items-start gap-x-4 gap-y-6">
+        <div className="text-center w-56">
+          <div className="h-14 flex items-end justify-center pb-1">
             {data.companySignatureDataUrl && (
               <img src={data.companySignatureDataUrl} alt="Assinatura do Contratado" className="max-h-full w-auto object-contain" />
             )}
           </div>
-          <div className="border-t-2 border-gray-800 pt-2">
-            <p className="text-sm font-semibold h-5">{EMPRESA.responsavel}</p>
-            <p className="text-xs text-gray-600">Assinatura do Contratado</p>
-            <p className="text-xs text-gray-600">CPF: {EMPRESA.responsavelCpf}</p>
+          <div className="border-t border-gray-800 pt-1.5">
+            <p className="text-xs font-semibold">{EMPRESA.responsavel}</p>
+            <p className="text-[10px] text-gray-600">Assinatura do Contratado</p>
           </div>
         </div>
 
         {includeSignature && (
-          <div className="text-center w-72">
-            <div className="h-20 flex items-end justify-center pb-1">
+          <div className="text-center w-56">
+            <div className="h-14 flex items-end justify-center pb-1">
               {data.signatureDataUrl && (
                 <img src={data.signatureDataUrl} alt="Assinatura do Contratante" className="max-h-full w-auto object-contain" />
               )}
             </div>
-            <div className="border-t-2 border-gray-800 pt-2">
-              <p className="text-sm font-semibold h-5">{data.clientName || ''}</p>
-              <p className="text-xs text-gray-600">Assinatura do Contratante</p>
-              {data.clientCnpj ? (
-                <p className="text-xs text-gray-600">CNPJ: {data.clientCnpj}</p>
-              ) : (
-                data.clientCpf && <p className="text-xs text-gray-600">CPF: {data.clientCpf}</p>
-              )}
+            <div className="border-t border-gray-800 pt-1.5">
+              <p className="text-xs font-semibold">{data.clientName || ''}</p>
+              <p className="text-[10px] text-gray-600">Assinatura do Contratante</p>
             </div>
           </div>
         )}
       </section>
 
       {/* Footer */}
-      <footer className="text-left text-xs pt-8 mt-10">
+      <footer className="text-left text-[9px] pt-4 mt-6">
         <div className="space-y-px">
           <p>Razão Social: {EMPRESA.nome} / Nome Fantasia: {EMPRESA.fantasia}</p>
           <p>CNPJ: {EMPRESA.cnpj} / Inscrição Estadual: {EMPRESA.ie}</p>
