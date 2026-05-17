@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { PedidoForm } from '@/components/pedido/PedidoForm'
 import { PedidoPreview } from '@/components/pedido/PedidoPreview'
-import { generatePDF, downloadTxtContent } from '@/lib/utils/pdf'
+import { printPDF, downloadTxtContent } from '@/lib/utils/pdf'
 import { EMPRESA } from '@/lib/constants/empresa'
 import { initialPedidoData } from '@/types/pedido'
 import type { PedidoFormData } from '@/types/pedido'
@@ -117,7 +117,7 @@ export default function NovoPedidoPage() {
     try {
       const clientName = formData.clientName.replace(/\s+/g, '_') || 'novo'
       const pdfDate = formData.date.replace(/\//g, '-')
-      await generatePDF('print-area', `pedido-${clientName}-${pdfDate}.pdf`)
+      printPDF()
     } catch (err) {
       alert('Erro ao gerar PDF')
     } finally {

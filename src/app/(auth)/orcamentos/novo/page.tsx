@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { PedidoForm } from '@/components/pedido/PedidoForm'
 import { PedidoPreview } from '@/components/pedido/PedidoPreview'
-import { generatePDF, downloadTxtContent } from '@/lib/utils/pdf'
+import { printPDF, downloadTxtContent } from '@/lib/utils/pdf'
 import { initialPedidoData } from '@/types/pedido'
 import type { PedidoFormData } from '@/types/pedido'
 
@@ -98,7 +98,7 @@ export default function NovoOrcamentoPage() {
     setIsPrinting(true)
     try {
       const name = formData.clientName.replace(/\s+/g, '_') || 'orcamento'
-      await generatePDF('print-area', `orcamento-${name}.pdf`)
+      printPDF()
     } catch {} finally {
       setIsPrinting(false)
     }

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { PedidoForm } from '@/components/pedido/PedidoForm'
 import { PedidoPreview } from '@/components/pedido/PedidoPreview'
-import { generatePDF } from '@/lib/utils/pdf'
+import { printPDF } from '@/lib/utils/pdf'
 import { initialPedidoData } from '@/types/pedido'
 import type { PedidoFormData } from '@/types/pedido'
 import Link from 'next/link'
@@ -76,7 +76,7 @@ export default function EditarOrcamentoPage() {
   const handlePrint = async () => {
     if (!formData) return
     setIsPrinting(true)
-    try { await generatePDF('print-area', `orcamento-${(formData.clientName || '').replace(/\s+/g, '_')}.pdf`) } catch {}
+    printPDF()
     setIsPrinting(false)
   }
 
