@@ -198,6 +198,26 @@ export default function NovoOrcamentoPage() {
                 Converter em Pedido
               </button>
             )}
+            {currentDocId && (
+              <button onClick={async () => {
+                let token = currentDocId
+                // Check if document already has a public token
+                const supabase = createClient()
+                const { data: doc } = await supabase.from('document').select('public_token').eq('id', currentDocId).single()
+                if (doc?.public_token) token = doc.public_token
+                else {
+                  // Generate token
+                  token = crypto.randomUUID().slice(0, 8)
+                  await supabase.from('document').update({ public_token: token }).eq('id', currentDocId)
+                }
+                const link = `${window.location.origin}/orcamento/${token}`
+                await navigator.clipboard.writeText(link)
+                alert(`Link copiado! Envie para o cliente:\n${link}`)
+              }}
+                className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700">
+                Compartilhar
+              </button>
+            )}
             <button onClick={handlePrint} disabled={isPrinting}
               className="px-4 py-2 text-sm font-medium text-white bg-sky-600 rounded-md hover:bg-sky-700 disabled:bg-sky-300">
               {isPrinting ? 'Gerando PDF...' : 'PDF'}

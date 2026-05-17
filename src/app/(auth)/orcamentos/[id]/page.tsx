@@ -100,6 +100,18 @@ export default function EditarOrcamentoPage() {
             {status === 'rascunho' && <button onClick={() => handleStatusChange('enviado')} className="px-3 py-2 text-sm font-medium text-white bg-amber-600 rounded-md hover:bg-amber-700">Enviar</button>}
             {status === 'enviado' && <button onClick={() => handleStatusChange('aprovado')} className="px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700">Aprovar</button>}
             {status === 'aprovado' && <button onClick={handleConvertToPedido} className="px-3 py-2 text-sm font-medium text-white bg-sky-600 rounded-md hover:bg-sky-700">+ Pedido</button>}
+            <button onClick={async () => {
+              const supabase = createClient()
+              const { data: doc } = await supabase.from('document').select('public_token').eq('id', id).single()
+              let token = doc?.public_token
+              if (!token) {
+                token = crypto.randomUUID().slice(0, 8)
+                await supabase.from('document').update({ public_token: token }).eq('id', id)
+              }
+              const link = `${window.location.origin}/orcamento/${token}`
+              await navigator.clipboard.writeText(link)
+              alert(`Link copiado!\n${link}`)
+            }} className="px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700">Compartilhar</button>
             <button onClick={handleSave} disabled={isSaving} className="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">{isSaving ? 'Salvando...' : 'Salvar'}</button>
             <button onClick={handlePrint} disabled={isPrinting} className="px-3 py-2 text-sm font-medium text-white bg-sky-600 rounded-md hover:bg-sky-700">{isPrinting ? '...' : 'PDF'}</button>
           </div>
