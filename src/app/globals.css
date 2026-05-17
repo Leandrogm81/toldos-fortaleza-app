@@ -18,6 +18,37 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.dark body,
+body:has(.dark) {
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+}
+
+.dark,
+.dark body {
+  background: #0f172a;
+  color: #f1f5f9;
+}
+
+/* Fix for dark mode inputs/selects */
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: #1e293b;
+  color: #f1f5f9;
+  border-color: #334155;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #64748b;
+}
+
+/* Dark mode for readonly inputs */
+.dark input[readonly] {
+  background-color: #0f172a;
+}
+
 @media print {
   body * {
     visibility: hidden;
