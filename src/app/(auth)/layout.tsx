@@ -6,8 +6,6 @@ import { auth } from '@/lib/auth'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Header } from '@/components/layout/Header'
 
-const publicPages = ['/login', '/orcamento']
-
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
@@ -15,22 +13,15 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   const [user, setUser] = useState(auth.getUser())
 
   useEffect(() => {
-    const unsub = auth.subscribe(() => {
-      setUser(auth.getUser())
-    })
-
+    const unsub = auth.subscribe(() => setUser(auth.getUser()))
     auth.loadSession().finally(() => setLoading(false))
-
     return unsub
   }, [])
 
   useEffect(() => {
     if (loading) return
-    const isPublic = publicPages.some((p) => pathname.startsWith(p))
-    if (!user && !isPublic) {
-      router.push('/login')
-    }
-  }, [user, loading, pathname, router])
+    if (!user) router.push('/login')
+  }, [user, loading, router])
 
   if (loading) {
     return (
@@ -39,9 +30,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </div>
     )
   }
-
-  const isPublic = publicPages.some((p) => pathname.startsWith(p))
-  if (isPublic) return <>{children}</>
 
   if (!user) return null
 
