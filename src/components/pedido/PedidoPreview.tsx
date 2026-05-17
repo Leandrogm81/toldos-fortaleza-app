@@ -17,134 +17,138 @@ export function PedidoPreview({
   validade?: string
 }) {
   return (
-    <div id="print-area" className="w-full mx-auto bg-white shadow-2xl p-4 sm:p-6 border border-gray-300 font-sans text-xs text-gray-800">
-      <header className="text-center mb-4">
-        {/* Logo */}
+    <div
+      id="print-area"
+      style={{
+        width: '100%',
+        margin: '0 auto',
+        backgroundColor: '#ffffff',
+        padding: '16px 24px',
+        border: '1px solid #d1d5db',
+        fontFamily: 'Arial, sans-serif',
+        fontSize: '11px',
+        color: '#1f2937',
+        boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
+      }}
+    >
+      <header style={{ textAlign: 'center', marginBottom: '12px' }}>
         {logoSrc ? (
-          <img src={logoSrc} alt="Logo" className="h-16 w-auto mx-auto object-contain" />
-        ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" className="h-12 w-auto mx-auto text-sky-800">
-            <path d="M35 2 H 5 V 38 H 35 V 28 H 20 V 12 H 35 V 2 Z" stroke="currentColor" strokeWidth="3" fill="none" strokeLinejoin="round" />
-          </svg>
-        )}
-        <h2 className="text-base font-bold tracking-widest mt-2">
+          <img src={logoSrc} alt="Logo" style={{ height: '64px', width: 'auto', margin: '0 auto', objectFit: 'contain' }} />
+        ) : null}
+        <h2 style={{ fontSize: '14px', fontWeight: 'bold', letterSpacing: '2px', marginTop: '6px', color: '#000000' }}>
           {mode === 'orcamento' ? 'ORÇAMENTO' : 'PEDIDO DE COMPRA'}
         </h2>
         {mode === 'orcamento' && validade && (
-          <p className="text-xs text-gray-600 mt-1">Validade: {validade}</p>
+          <p style={{ fontSize: '10px', color: '#4b5563', marginTop: '2px' }}>Validade: {validade}</p>
         )}
       </header>
 
       <main>
-        <p className="mb-3">Data: {data.date}</p>
+        <p style={{ marginBottom: '8px' }}>Data: {data.date}</p>
 
         {/* Contratado */}
-        <section className="mb-3">
-          <h3 className="font-bold text-xs text-sky-700 border-b border-sky-700 pb-0.5 mb-1.5">Contratado</h3>
-          <div className="space-y-px text-xs">
-            <p>{EMPRESA.nome}</p>
-            <p>{EMPRESA.endereco} – {EMPRESA.bairro} – {EMPRESA.cidade} CEP: {EMPRESA.cep}</p>
-            <p>Tel: {EMPRESA.telefone} | CNPJ: {EMPRESA.cnpj} | IE: {EMPRESA.ie}</p>
+        <section style={{ marginBottom: '8px' }}>
+          <h3 style={{ fontWeight: 'bold', fontSize: '11px', color: '#0369a1', borderBottom: '1px solid #0369a1', paddingBottom: '2px', marginBottom: '4px' }}>Contratado</h3>
+          <div style={{ fontSize: '11px' }}>
+            <p style={{ margin: 0 }}>{EMPRESA.nome}</p>
+            <p style={{ margin: 0 }}>{EMPRESA.endereco} – {EMPRESA.bairro} – {EMPRESA.cidade} CEP: {EMPRESA.cep}</p>
+            <p style={{ margin: 0 }}>Tel: {EMPRESA.telefone} | CNPJ: {EMPRESA.cnpj} | IE: {EMPRESA.ie}</p>
           </div>
         </section>
 
         {/* Contratante */}
-        <section className="mb-3">
-          <h3 className="font-bold text-xs text-sky-700 border-b border-sky-700 pb-0.5 mb-1.5">Contratante</h3>
-          <div className="space-y-px text-xs">
-            {data.clientName && <p>Nome: {data.clientName}</p>}
-            {data.clientAddress && <p>Endereço: {data.clientAddress}</p>}
-            {data.clientNeighborhood && <p>Bairro: {data.clientNeighborhood}</p>}
-            {data.clientCity && <p>Cidade: {data.clientCity}</p>}
-            {data.clientPhone && <p>Telefone: {data.clientPhone}</p>}
+        <section style={{ marginBottom: '8px' }}>
+          <h3 style={{ fontWeight: 'bold', fontSize: '11px', color: '#0369a1', borderBottom: '1px solid #0369a1', paddingBottom: '2px', marginBottom: '4px' }}>Contratante</h3>
+          <div style={{ fontSize: '11px' }}>
+            {data.clientName && <p style={{ margin: 0 }}>Nome: {data.clientName}</p>}
+            {data.clientAddress && <p style={{ margin: 0 }}>Endereço: {data.clientAddress}</p>}
+            {data.clientNeighborhood && <p style={{ margin: 0 }}>Bairro: {data.clientNeighborhood}</p>}
+            {data.clientCity && <p style={{ margin: 0 }}>Cidade: {data.clientCity}</p>}
+            {data.clientPhone && <p style={{ margin: 0 }}>Telefone: {data.clientPhone}</p>}
             {data.clientCnpj ? (
-              <>
-                {data.clientCnpj && <p>CNPJ: {data.clientCnpj}{data.clientIe ? ` / IE: ${data.clientIe}` : ''}</p>}
-              </>
+              <p style={{ margin: 0 }}>CNPJ: {data.clientCnpj}{data.clientIe ? ` / IE: ${data.clientIe}` : ''}</p>
             ) : (
-              <>
-                {data.clientCpf && <p>CPF: {data.clientCpf}{data.clientRg ? ` / RG: ${data.clientRg}` : ''}</p>}
-                {!data.clientCpf && data.clientRg && <p>RG: {data.clientRg}</p>}
-              </>
+              <p style={{ margin: 0 }}>
+                {data.clientCpf && `CPF: ${data.clientCpf}${data.clientRg ? ` / RG: ${data.clientRg}` : ''}`}
+                {!data.clientCpf && data.clientRg && `RG: ${data.clientRg}`}
+              </p>
             )}
           </div>
         </section>
 
         {/* Produtos */}
-        <section className="mb-3">
-          <h3 className="font-bold text-xs text-sky-700 border-b border-sky-700 pb-0.5 mb-1.5">Produto(s)</h3>
+        <section style={{ marginBottom: '8px' }}>
+          <h3 style={{ fontWeight: 'bold', fontSize: '11px', color: '#0369a1', borderBottom: '1px solid #0369a1', paddingBottom: '2px', marginBottom: '4px' }}>Produto(s)</h3>
           {data.products.map((product, index) => (
-            <div key={index} className={`space-y-px text-xs ${index < data.products.length - 1 ? 'mb-1.5 pb-1.5 border-b border-gray-200' : ''}`}>
-              {product.item && <p><span className="font-semibold">Item {index + 1}:</span> {product.item}</p>}
-              {product.structure && <p><span className="font-semibold">Estrutura:</span> {product.structure}</p>}
-              {product.material && <p><span className="font-semibold">Material:</span> {product.material}</p>}
-              {product.accessories && <p><span className="font-semibold">Acessórios:</span> {product.accessories}</p>}
-              {product.measure && <p><span className="font-semibold">Medida:</span> {product.measure}</p>}
+            <div key={index} style={{ fontSize: '11px', borderBottom: index < data.products.length - 1 ? '1px solid #e5e7eb' : 'none', paddingBottom: '4px', marginBottom: '4px' }}>
+              {product.item && <p style={{ margin: 0 }}><b>Item {index + 1}:</b> {product.item}</p>}
+              {product.structure && <p style={{ margin: 0 }}><b>Estrutura:</b> {product.structure}</p>}
+              {product.material && <p style={{ margin: 0 }}><b>Material:</b> {product.material}</p>}
+              {product.accessories && <p style={{ margin: 0 }}><b>Acessórios:</b> {product.accessories}</p>}
+              {product.measure && <p style={{ margin: 0 }}><b>Medida:</b> {product.measure}</p>}
             </div>
           ))}
         </section>
 
         {/* Valor e Pagamento */}
-        <section className="space-y-1.5 text-xs my-4">
+        <section style={{ fontSize: '11px', margin: '10px 0' }}>
           {data.productValue && (
-            <div className="border border-black p-1.5">
+            <div style={{ border: '1px solid #000000', padding: '4px 6px', marginBottom: '2px' }}>
               Valor R$ {data.productValue.replace('R$', '').trim()} – {data.productValueText}
             </div>
           )}
-          <div className="border border-black p-1.5">
+          <div style={{ border: '1px solid #000000', padding: '4px 6px', marginBottom: '2px' }}>
             Forma de pagamento: {data.paymentMethod || 'A combinar'}
           </div>
-          <div className="border border-black p-1.5">
+          <div style={{ border: '1px solid #000000', padding: '4px 6px' }}>
             {EMPRESA.banco} / Pix: {EMPRESA.pix}
           </div>
         </section>
 
         {/* Prazo */}
-        <section className="space-y-px text-xs">
-          {data.deliveryTime && <p>Prazo de Entrega: {data.deliveryTime}</p>}
-          <p>Garantia: {EMPRESA.garantia}</p>
+        <section style={{ fontSize: '11px' }}>
+          {data.deliveryTime && <p style={{ margin: 0 }}>Prazo de Entrega: {data.deliveryTime}</p>}
+          <p style={{ margin: 0 }}>Garantia: {EMPRESA.garantia}</p>
         </section>
       </main>
 
       {/* Assinaturas */}
-      <section className="mt-10 flex flex-wrap justify-around items-start gap-x-4 gap-y-6">
-        <div className="text-center w-56">
-          <div className="h-14 flex items-end justify-center pb-1">
+      <section style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around', marginTop: '24px', gap: '16px 32px' }}>
+        <div style={{ textAlign: 'center', width: '200px' }}>
+          <div style={{ height: '50px', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: '4px' }}>
             {data.companySignatureDataUrl && (
-              <img src={data.companySignatureDataUrl} alt="Assinatura do Contratado" className="max-h-full w-auto object-contain" />
+              <img src={data.companySignatureDataUrl} alt="Assinatura" style={{ maxHeight: '100%', width: 'auto', objectFit: 'contain' }} />
             )}
           </div>
-          <div className="border-t border-gray-800 pt-1.5">
-            <p className="text-xs font-semibold">{EMPRESA.responsavel}</p>
-            <p className="text-[10px] text-gray-600">Assinatura do Contratado</p>
+          <div style={{ borderTop: '1px solid #1f2937', paddingTop: '4px' }}>
+            <p style={{ margin: 0, fontSize: '10px', fontWeight: 'bold' }}>{EMPRESA.responsavel}</p>
+            <p style={{ margin: 0, fontSize: '8px', color: '#4b5563' }}>Assinatura do Contratado</p>
           </div>
         </div>
 
         {includeSignature && (
-          <div className="text-center w-56">
-            <div className="h-14 flex items-end justify-center pb-1">
+          <div style={{ textAlign: 'center', width: '200px' }}>
+            <div style={{ height: '50px', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: '4px' }}>
               {data.signatureDataUrl && (
-                <img src={data.signatureDataUrl} alt="Assinatura do Contratante" className="max-h-full w-auto object-contain" />
+                <img src={data.signatureDataUrl} alt="Assinatura" style={{ maxHeight: '100%', width: 'auto', objectFit: 'contain' }} />
               )}
             </div>
-            <div className="border-t border-gray-800 pt-1.5">
-              <p className="text-xs font-semibold">{data.clientName || ''}</p>
-              <p className="text-[10px] text-gray-600">Assinatura do Contratante</p>
+            <div style={{ borderTop: '1px solid #1f2937', paddingTop: '4px' }}>
+              <p style={{ margin: 0, fontSize: '10px', fontWeight: 'bold' }}>{data.clientName || ''}</p>
+              <p style={{ margin: 0, fontSize: '8px', color: '#4b5563' }}>Assinatura do Contratante</p>
             </div>
           </div>
         )}
       </section>
 
       {/* Footer */}
-      <footer className="text-left text-[9px] pt-4 mt-6">
-        <div className="space-y-px">
-          <p>Razão Social: {EMPRESA.nome} / Nome Fantasia: {EMPRESA.fantasia}</p>
-          <p>CNPJ: {EMPRESA.cnpj} / Inscrição Estadual: {EMPRESA.ie}</p>
-          <p>Endereço: {EMPRESA.endereco} {EMPRESA.bairro} - {EMPRESA.cidade} – CEP: {EMPRESA.cep}</p>
-          <p>Telefone e WhatsApp: {EMPRESA.telefone}</p>
-          <p>Redes Sociais: Facebook {EMPRESA.facebook} / Instagram: {EMPRESA.instagram}</p>
-          <p>Site: {EMPRESA.site}</p>
-        </div>
+      <footer style={{ fontSize: '8px', textAlign: 'left', paddingTop: '10px', marginTop: '14px' }}>
+        <p style={{ margin: 0 }}>Razão Social: {EMPRESA.nome} / Nome Fantasia: {EMPRESA.fantasia}</p>
+        <p style={{ margin: 0 }}>CNPJ: {EMPRESA.cnpj} / Inscrição Estadual: {EMPRESA.ie}</p>
+        <p style={{ margin: 0 }}>Endereço: {EMPRESA.endereco} {EMPRESA.bairro} - {EMPRESA.cidade} – CEP: {EMPRESA.cep}</p>
+        <p style={{ margin: 0 }}>Telefone e WhatsApp: {EMPRESA.telefone}</p>
+        <p style={{ margin: 0 }}>Redes Sociais: Facebook {EMPRESA.facebook} / Instagram: {EMPRESA.instagram}</p>
+        <p style={{ margin: 0 }}>Site: {EMPRESA.site}</p>
       </footer>
     </div>
   )
