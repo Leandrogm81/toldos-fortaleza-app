@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { InstallPrompt } from "@/components/layout/InstallPrompt"
+import { PwaRegister } from "@/components/layout/PwaRegister"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,11 +37,13 @@ export default function RootLayout({
     >
       <head>
         <meta name="theme-color" content="#0369a1" />
+        <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
       </head>
       <body className="min-h-full">
         {children}
         <InstallPrompt />
+        <PwaRegister />
       </body>
     </html>
   )
