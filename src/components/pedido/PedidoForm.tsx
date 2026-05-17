@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 import { formatCpf, formatCnpj, formatPhone, formatCep, formatDate, formatCurrency } from '@/lib/utils/format'
 import { fetchAddressByCep } from '@/lib/utils/cep'
 import { SignaturePad, SignatureModal } from './SignaturePad'
@@ -150,8 +151,19 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
     updateField('signatureDataUrl', '')
   }
 
-  const handleSaveCompanySignature = (dataUrl: string) => {
+  // Company signature
+  const handleSaveCompanySignature = async (dataUrl: string, saveToProfile?: boolean) => {
     updateField('companySignatureDataUrl', dataUrl)
+    if (saveToProfile) {
+      // Save to profile for future use
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          await supabase.from('profile').update({ company_signature_data_url: dataUrl }).eq('id', user.id)
+        }
+      } catch {}
+    }
     setIsCompanySignatureModalOpen(false)
   }
 
@@ -508,7 +520,13 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
 
       {/* Signature Modals */}
       <SignatureModal isOpen={isSignatureModalOpen} onClose={() => setIsSignatureModalOpen(false)} onSave={handleSaveSignature} />
-      <SignatureModal isOpen={isCompanySignatureModalOpen} onClose={() => setIsCompanySignatureModalOpen(false)} onSave={handleSaveCompanySignature} />
+      <SignatureModal isOpen={isCompanySignatureModalOpen} onClose={() => setIsCompanySignatureModalOpen(false)} onSave={handleSaveCompanySignature} onSaveProfile={async (dataUrl) => {
+        try {
+          const supabase = createClient()
+          const { data: { user } } = await supabase.auth.getUser()
+          if (user) await supabase.from('profile').update({ company_signature_data_url: dataUrl }).eq('id', user.id)
+        } catch {}
+      }} />
     </form>
   )
 }

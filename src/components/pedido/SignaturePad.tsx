@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, useImperativeHandle, useRef, useEffect, useCallback } from 'react'
+import { forwardRef, useImperativeHandle, useRef, useEffect, useCallback, useState } from 'react'
 
 export interface SignaturePadHandle {
   clear: () => void
@@ -142,18 +142,27 @@ export function SignatureModal({
   isOpen,
   onClose,
   onSave,
+  onSaveProfile,
 }: {
   isOpen: boolean
   onClose: () => void
-  onSave: (dataUrl: string) => void
+  onSave: (dataUrl: string, saveToProfile?: boolean) => void
+  onSaveProfile?: (dataUrl: string) => Promise<void>
 }) {
   const signaturePadRef = useRef<SignaturePadHandle>(null)
+  const [saveProfile, setSaveProfile] = useState(false)
+  const [savingProfile, setSavingProfile] = useState(false)
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (signaturePadRef.current) {
       const signature = signaturePadRef.current.getSignature()
       if (signature) {
-        onSave(signature)
+        if (saveProfile && onSaveProfile) {
+          setSavingProfile(true)
+          await onSaveProfile(signature)
+          setSavingProfile(false)
+        }
+        onSave(signature, saveProfile)
       } else {
         alert('Por favor, forneça uma assinatura.')
       }
@@ -173,6 +182,13 @@ export function SignatureModal({
         <div className="flex justify-center mb-4">
           <SignaturePad ref={signaturePadRef} width={450} height={200} />
         </div>
+        {onSaveProfile && (
+          <label className="flex items-center gap-2 mb-4 cursor-pointer">
+            <input type="checkbox" checked={saveProfile} onChange={(e) => setSaveProfile(e.target.checked)}
+              className="h-4 w-4 text-sky-600 border-gray-300 rounded" />
+            <span className="text-sm text-gray-700">Salvar esta assinatura no meu perfil</span>
+          </label>
+        )}
         <div className="flex flex-col sm:flex-row justify-end gap-3">
           <button onClick={handleClear} className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">
             Limpar
@@ -180,8 +196,8 @@ export function SignatureModal({
           <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">
             Cancelar
           </button>
-          <button onClick={handleSave} className="px-4 py-2 text-sm font-medium text-white bg-sky-600 rounded-md hover:bg-sky-700">
-            Salvar Assinatura
+          <button onClick={handleSave} disabled={savingProfile} className="px-4 py-2 text-sm font-medium text-white bg-sky-600 rounded-md hover:bg-sky-700 disabled:bg-sky-300">
+            {savingProfile ? 'Salvando...' : 'Salvar Assinatura'}
           </button>
         </div>
       </div>
