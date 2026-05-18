@@ -25,6 +25,11 @@ export interface Product {
   observacao: string        // campo de observação (reparo etc)
 }
 
+export interface PaymentOption {
+  id: string
+  label: string             // ex: "À vista com 10% de desconto"
+}
+
 export interface PedidoFormData {
   date: string
   clientName: string
@@ -41,6 +46,7 @@ export interface PedidoFormData {
   productValue: string
   productValueText: string
   paymentMethod: string
+  paymentOptions: PaymentOption[]  // múltiplas opções (orçamento)
   deliveryTime: string
   signatureDataUrl: string
   companySignatureDataUrl: string
@@ -82,6 +88,7 @@ export const initialPedidoData: PedidoFormData = {
   productValue: '',
   productValueText: '',
   paymentMethod: '',
+  paymentOptions: [],
   deliveryTime: '',
   signatureDataUrl: '',
   companySignatureDataUrl: '',

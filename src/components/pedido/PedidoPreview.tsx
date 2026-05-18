@@ -1,7 +1,7 @@
 'use client'
 
 import { EMPRESA } from '@/lib/constants/empresa'
-import type { PedidoFormData } from '@/types/pedido'
+import type { PedidoFormData, PaymentOption } from '@/types/pedido'
 
 export function PedidoPreview({
   data,
@@ -118,6 +118,16 @@ export function PedidoPreview({
           )}
           <div style={{ border: '1px solid #000000', padding: '4px 6px', marginBottom: '2px' }}>
             Forma de pagamento: {data.paymentMethod || 'A combinar'}
+            {data.paymentOptions && data.paymentOptions.length > 0 && (
+              <div style={{ marginTop: '4px' }}>
+                <p style={{ fontWeight: 'bold', margin: '0 0 2px 0' }}>Opções de pagamento:</p>
+                {data.paymentOptions.map((opt, oi) => (
+                  <p key={opt.id} style={{ margin: '0', paddingLeft: '12px', fontSize: '10px' }}>
+                    {String.fromCharCode(97 + oi)}) {opt.label}
+                  </p>
+                ))}
+              </div>
+            )}
           </div>
           <div style={{ border: '1px solid #000000', padding: '4px 6px' }}>
             {EMPRESA.banco} / Pix: {EMPRESA.pix}
