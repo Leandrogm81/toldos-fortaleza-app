@@ -8,6 +8,8 @@ import { PedidoPreview } from '@/components/pedido/PedidoPreview'
 import { generatePDF, downloadTxtContent } from '@/lib/utils/pdf'
 import { initialPedidoData } from '@/types/pedido'
 import type { PedidoFormData } from '@/types/pedido'
+import { PhotoUpload } from '@/components/pedido/PhotoUpload'
+import { PhotoGallery } from '@/components/pedido/PhotoGallery'
 
 export default function NovoOrcamentoPage() {
   const router = useRouter()
@@ -23,6 +25,7 @@ export default function NovoOrcamentoPage() {
   const [status, setStatus] = useState<string>('rascunho')
   const [actionsMenuOpen, setActionsMenuOpen] = useState(false)
   const actionsMenuRef = useRef<HTMLDivElement>(null)
+  const [photoRefresh, setPhotoRefresh] = useState(0)
 
   // Load logo from profile
   useEffect(() => {
@@ -266,6 +269,22 @@ export default function NovoOrcamentoPage() {
           <PedidoPreview data={formData} logoSrc={logoSrc} includeSignature={true} mode="orcamento" validade={validade} />
         </div>
       </main>
+
+      {/* Fotos Section — only after orçamento is saved */}
+      {currentDocId && (
+        <div className="max-w-screen-2xl mx-auto px-2 sm:px-6 lg:px-8 pb-8">
+          <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-3">📸 Fotos</h2>
+            <PhotoUpload
+              documentId={currentDocId}
+              onUploaded={() => setPhotoRefresh((prev) => prev + 1)}
+            />
+            <div className="mt-4">
+              <PhotoGallery documentId={currentDocId} refreshKey={photoRefresh} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

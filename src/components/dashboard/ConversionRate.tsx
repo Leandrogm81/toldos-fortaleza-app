@@ -1,35 +1,50 @@
 'use client'
 
-interface ConversionRateProps {
-  totalOrcamentosComVisita: number
-  totalConvertidos: number
-}
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
-export function ConversionRate({ totalOrcamentosComVisita, totalConvertidos }: ConversionRateProps) {
-  const rate = totalOrcamentosComVisita > 0 ? Math.round((totalConvertidos / totalOrcamentosComVisita) * 100) : 0
+export function ConversionRate() {
+  const [rate, setRate] = useState<{ total: number; converted: number } | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => { loadData() }, [])
+
+  async function loadData() {
+    const supabase = createClient()
+
+    // Orçamentos que tiveram visita de medição
+    const { data: orcVisitas } = await supabase
+      .from('appointment')
+      .select('client_id')
+      .eq('type', 'visita_medicao')
+      .not('client_id', 'is', null)
+
+    const clientesComVisita = [...new Set((orcVisitas || []).map((a) => a.client_id))]
+
+    // Desses clientes, quantos têm pedido
+    const { count: converted } = await supabase
+      .from('document')
+      .select('*', { count: 'exact', head: true })
+      .eq('type', 'pedido')
+      .in('client_id', clientesComVisita.length > 0 ? clientesComVisita : ['none'])
+
+    setRate({ total: clientesComVisita.length, converted: converted || 0 })
+    setLoading(false)
+  }
+
+  if (loading) return <div className="h-32 flex items-center justify-center"><div className="animate-spin w-5 h-5 border-2 border-amber-600 border-t-transparent rounded-full" /></div>
+  if (!rate || rate.total === 0) return <p className="text-sm text-gray-400 text-center py-4">Sem dados de conversão</p>
+
+  const pct = Math.round((rate.converted / rate.total) * 100)
 
   return (
-    <div className="text-center py-4">
-      <p className="text-sm text-gray-500 mb-2">Orçamentos com visita → Pedidos</p>
-      <div className="relative w-28 h-28 mx-auto">
-        <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-          <circle cx="18" cy="18" r="15.5" fill="none" stroke="#e5e7eb" strokeWidth="3" />
-          <circle
-            cx="18" cy="18" r="15.5"
-            fill="none"
-            stroke="#16a34a"
-            strokeWidth="3"
-            strokeDasharray={`${rate} 100`}
-            strokeLinecap="round"
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-2xl font-bold text-gray-900">{rate}%</span>
-        </div>
+    <div className="text-center">
+      <p className="text-3xl font-bold text-amber-600">{pct}%</p>
+      <p className="text-sm text-gray-500 mt-1">{rate.converted} de {rate.total} clientes</p>
+      <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+        <div className="bg-amber-500 h-2 rounded-full transition-all" style={{ width: `${pct}%` }} />
       </div>
-      <p className="text-xs text-gray-400 mt-2">
-        {totalConvertidos} de {totalOrcamentosComVisita} orçamentos
-      </p>
+      <p className="text-xs text-gray-400 mt-1">orçamentos com visita → pedidos</p>
     </div>
   )
 }
