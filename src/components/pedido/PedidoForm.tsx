@@ -7,6 +7,7 @@ import { fetchAddressByCep } from '@/lib/utils/cep'
 import { SignaturePad, SignatureModal } from './SignaturePad'
 import { ClienteBusca } from '@/components/cliente/ClienteBusca'
 import { ProductAutocomplete } from './ProductAutocomplete'
+import { MultiAccessory } from './MultiAccessory'
 import { getConfigForItem, getCoresMaterial, COR_POLICARBONATO } from '@/lib/constants/produtos'
 import type { PedidoFormData, Product } from '@/types/pedido'
 import { initialPedidoData, initialProduct } from '@/types/pedido'
@@ -420,7 +421,7 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Acessórios</label>
-              <ProductAutocomplete type="acessorio" value={product.accessories} onChange={(val) => updateProductField(index, 'accessories', val)} />
+              <MultiAccessory value={product.accessories} onChange={(val) => updateProductField(index, 'accessories', val)} />
             </div>
             {/* Medidas — esconde se item sem medidas */}
             {(() => {

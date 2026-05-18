@@ -124,7 +124,7 @@ export default function EditarOrcamentoPage() {
           <PedidoForm data={formData} onChange={setFormData} logoSrc={logoSrc} onLogoChange={(e) => { const r = new FileReader(); r.onload = (ev) => setLogoSrc(ev.target?.result as string); if (e.target?.files?.[0]) r.readAsDataURL(e.target.files[0]); }} onRemoveLogo={() => setLogoSrc(null)} mode="orcamento" validade={validade} onValidadeChange={setValidade} />
         </div>
         <div className="lg:col-span-3 bg-gray-200 p-4 sm:p-8 rounded-lg shadow-inner overflow-y-auto lg:max-h-[calc(100vh-120px)]">
-          <PedidoPreview data={formData} logoSrc={logoSrc} includeSignature={true} mode="orcamento" validade={validade} />
+          <PedidoPreview data={formData} logoSrc={logoSrc} includeSignature={false} mode="orcamento" validade={validade} />
         </div>
       </main>
 
