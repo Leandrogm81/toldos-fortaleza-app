@@ -6,10 +6,9 @@ import { createClient } from '@/lib/supabase/client'
 import { PedidoForm } from '@/components/pedido/PedidoForm'
 import { PedidoPreview } from '@/components/pedido/PedidoPreview'
 import { generatePDF } from '@/lib/utils/pdf'
-import { initialPedidoData } from '@/types/pedido'
-import type { PedidoFormData } from '@/types/pedido'
 import { PhotoUpload } from '@/components/pedido/PhotoUpload'
 import { PhotoGallery } from '@/components/pedido/PhotoGallery'
+import type { PedidoFormData } from '@/types/pedido'
 import Link from 'next/link'
 
 export default function EditarOrcamentoPage() {
