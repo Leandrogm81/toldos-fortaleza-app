@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { PedidoForm } from '@/components/pedido/PedidoForm'
 import { PedidoPreview } from '@/components/pedido/PedidoPreview'
-import { generatePDF, downloadTxtContent } from '@/lib/utils/pdf'
+import { generatePDF } from '@/lib/utils/pdf'
+import { PhotoUpload } from '@/components/pedido/PhotoUpload'
+import { PhotoGallery } from '@/components/pedido/PhotoGallery'
 import { initialPedidoData } from '@/types/pedido'
 import type { PedidoFormData } from '@/types/pedido'
 import Link from 'next/link'
@@ -17,6 +19,7 @@ export default function EditarPedidoPage() {
   const [loading, setLoading] = useState(true)
   const [isPrinting, setIsPrinting] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [photoRefresh, setPhotoRefresh] = useState(0)
 
   useEffect(() => {
     if (!id) return
@@ -125,6 +128,20 @@ export default function EditarPedidoPage() {
           <PedidoPreview data={formData} logoSrc={logoSrc} includeSignature={true} />
         </div>
       </main>
+
+      {/* Fotos Section */}
+      <div className="max-w-screen-2xl mx-auto px-2 sm:px-6 lg:px-8 pb-8">
+        <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-3">📸 Fotos</h2>
+          <PhotoUpload
+            documentId={id}
+            onUploaded={() => setPhotoRefresh((prev) => prev + 1)}
+          />
+          <div className="mt-4">
+            <PhotoGallery documentId={id} refreshKey={photoRefresh} />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
