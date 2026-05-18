@@ -86,6 +86,24 @@ export function PedidoPreview({
               {product.material && <p style={{ margin: 0 }}><b>Material:</b> {product.material}</p>}
               {product.accessories && <p style={{ margin: 0 }}><b>Acessórios:</b> {product.accessories}</p>}
               {product.measure && <p style={{ margin: 0 }}><b>Medida:</b> {product.measure}</p>}
+              {(product.measures && product.measures.length > 0) ? (
+                product.measures.map((m: any, mi: number) => {
+                  const parts = [m.comprimento && `${m.comprimento}m`, m.largura && `${m.largura}m`, m.altura && `${m.altura}m`].filter(Boolean)
+                  return parts.length > 0 ? (
+                    <p key={mi} style={{ margin: 0 }}>
+                      <b>{product.measures!.length > 1 ? `Medida ${mi + 1}:` : 'Medida:'}</b> {parts.join(' × ')}
+                    </p>
+                  ) : null
+                })
+              ) : (
+                <>
+                  {(product.comprimento || product.largura || product.altura) && (
+                    <p style={{ margin: 0 }}>
+                      <b>Medida:</b> {[product.comprimento && `${product.comprimento}m`, product.largura && `${product.largura}m`, product.altura && `${product.altura}m`].filter(Boolean).join(' × ')}
+                    </p>
+                  )}
+                </>
+              )}
             </div>
           ))}
         </section>
