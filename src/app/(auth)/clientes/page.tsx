@@ -4,11 +4,13 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Client } from '@/types/client'
+import { ConfirmDialog } from '@/components/layout/ConfirmDialog'
 
 export default function ClientesPage() {
   const [clients, setClients] = useState<Client[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null)
 
   useEffect(() => {
     loadClients()
@@ -24,11 +26,12 @@ export default function ClientesPage() {
     setLoading(false)
   }
 
-  async function handleDelete(id: string, name: string) {
-    if (!confirm(`Excluir "${name}"? Esta ação não pode ser desfeita.`)) return
+  async function handleDelete() {
+    if (!deleteTarget) return
     const supabase = createClient()
-    await supabase.from('client').delete().eq('id', id)
-    setClients((prev) => prev.filter((c) => c.id !== id))
+    await supabase.from('client').delete().eq('id', deleteTarget.id)
+    setClients((prev) => prev.filter((c) => c.id !== deleteTarget.id))
+    setDeleteTarget(null)
   }
 
   const filtered = search
@@ -147,7 +150,7 @@ export default function ClientesPage() {
                           </svg>
                         </Link>
                         <button
-                          onClick={() => handleDelete(client.id, client.name)}
+                          onClick={() => setDeleteTarget({ id: client.id, name: client.name })}
                           className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                           title="Excluir"
                         >
@@ -167,6 +170,14 @@ export default function ClientesPage() {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Excluir cliente"
+        message={`Tem certeza que deseja excluir "${deleteTarget?.name}"? Esta ação não pode ser desfeita.`}
+        onConfirm={handleDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   )
 }
