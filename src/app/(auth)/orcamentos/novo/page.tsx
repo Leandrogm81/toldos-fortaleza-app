@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { PedidoForm } from '@/components/pedido/PedidoForm'
 import { PedidoPreview } from '@/components/pedido/PedidoPreview'
 import { generatePDF, downloadTxtContent } from '@/lib/utils/pdf'
-import { initialPedidoData } from '@/types/pedido'
+import { initialPedidoData, initialProduct } from '@/types/pedido'
 import type { PedidoFormData } from '@/types/pedido'
 import { PhotoUpload } from '@/components/pedido/PhotoUpload'
 import { PhotoGallery } from '@/components/pedido/PhotoGallery'
@@ -151,7 +151,7 @@ export default function NovoOrcamentoPage() {
   }
 
   const handleReset = () => {
-    setFormData({ ...initialPedidoData, date: new Date().toLocaleDateString('pt-BR'), products: [{ item: '', structure: '', material: '', accessories: '', measure: '' }] })
+    setFormData({ ...initialPedidoData, date: new Date().toLocaleDateString('pt-BR'), products: [{ ...initialProduct }] })
     setValidade('15 dias')
     setCurrentDocId(null)
     setStatus('rascunho')

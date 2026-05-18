@@ -6,6 +6,7 @@ import { formatCpf, formatCnpj, formatPhone, formatCep, formatDate, formatCurren
 import { fetchAddressByCep } from '@/lib/utils/cep'
 import { SignaturePad, SignatureModal } from './SignaturePad'
 import { ClienteBusca } from '@/components/cliente/ClienteBusca'
+import { ProductAutocomplete } from './ProductAutocomplete'
 import type { PedidoFormData, Product } from '@/types/pedido'
 import { initialPedidoData, initialProduct } from '@/types/pedido'
 import type { Client } from '@/types/client'
@@ -108,6 +109,11 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
     updateField('products', updatedProducts)
   }
 
+  const updateProductField = (index: number, field: keyof Product, value: string) => {
+    const updated = data.products.map((p, i) => i === index ? { ...p, [field]: value } : p)
+    updateField('products', updated)
+  }
+
   const handleAddProduct = () => {
     updateField('products', [...data.products, { ...initialProduct }])
   }
@@ -202,28 +208,6 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
 
   return (
     <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-      {/* Logo */}
-      <div>
-        <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Detalhes da Empresa</h2>
-        <div className="space-y-2">
-          <label htmlFor="logo-upload" className="block text-sm font-medium text-gray-700">Logotipo</label>
-          <div className="flex items-center gap-2">
-            <input
-              id="logo-upload"
-              type="file"
-              accept="image/png, image/jpeg, image/svg+xml"
-              onChange={onLogoChange}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100"
-            />
-            {logoSrc && (
-              <button type="button" onClick={onRemoveLogo} className="p-2 text-sm font-medium text-red-700 bg-red-100 rounded-md hover:bg-red-200">
-                X
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
       {/* Date */}
       <div>
         <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Dados Gerais</h2>
@@ -347,23 +331,36 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Item</label>
-              <input name="item" type="text" value={product.item} onChange={(e) => handleProductChange(index, e)} className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" />
+              <ProductAutocomplete type="item" value={product.item} onChange={(val) => updateProductField(index, 'item', val)} />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Estrutura e Acabamento</label>
-              <input name="structure" type="text" value={product.structure} onChange={(e) => handleProductChange(index, e)} className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" />
+              <ProductAutocomplete type="estrutura" value={product.structure} onChange={(val) => updateProductField(index, 'structure', val)} />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Material</label>
-              <input name="material" type="text" value={product.material} onChange={(e) => handleProductChange(index, e)} className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" />
+              <ProductAutocomplete type="material" value={product.material} onChange={(val) => updateProductField(index, 'material', val)} />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Acessórios</label>
-              <input name="accessories" type="text" value={product.accessories} onChange={(e) => handleProductChange(index, e)} className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" />
+              <ProductAutocomplete type="acessorio" value={product.accessories} onChange={(val) => updateProductField(index, 'accessories', val)} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Medida</label>
-              <input name="measure" type="text" value={product.measure} onChange={(e) => handleProductChange(index, e)} placeholder="Ex: 5,60X1,40" className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Medidas</label>
+              <div className="grid grid-cols-3 gap-2">
+                <div>
+                  <label className="block text-xs text-gray-500 mb-0.5">Comprimento (m)</label>
+                  <input type="text" value={product.comprimento} onChange={(e) => updateProductField(index, 'comprimento', e.target.value)} placeholder="5,60" className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-0.5">Largura (m)</label>
+                  <input type="text" value={product.largura} onChange={(e) => updateProductField(index, 'largura', e.target.value)} placeholder="1,40" className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-0.5">Altura (m)</label>
+                  <input type="text" value={product.altura} onChange={(e) => updateProductField(index, 'altura', e.target.value)} placeholder="0,30" className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" />
+                </div>
+              </div>
             </div>
           </div>
         ))}
@@ -465,7 +462,8 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
         </div>
       </div>
 
-      {/* Signatures */}
+      {/* Signatures — only for pedidos */}
+      {mode === 'pedido' && (
       <div>
         <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Opções Adicionais</h2>
 
@@ -517,8 +515,11 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
           )}
         </div>
       </div>
+      )}
 
       {/* Signature Modals */}
+      {mode === 'pedido' && (
+      <>
       <SignatureModal isOpen={isSignatureModalOpen} onClose={() => setIsSignatureModalOpen(false)} onSave={handleSaveSignature} />
       <SignatureModal isOpen={isCompanySignatureModalOpen} onClose={() => setIsCompanySignatureModalOpen(false)} onSave={handleSaveCompanySignature} onSaveProfile={async (dataUrl) => {
         try {
@@ -527,6 +528,8 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
           if (user) await supabase.from('profile').update({ company_signature_data_url: dataUrl }).eq('id', user.id)
         } catch {}
       }} />
+      </>
+      )}
     </form>
   )
 }

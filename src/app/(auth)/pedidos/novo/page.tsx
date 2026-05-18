@@ -7,7 +7,7 @@ import { PedidoForm } from '@/components/pedido/PedidoForm'
 import { PedidoPreview } from '@/components/pedido/PedidoPreview'
 import { generatePDF, downloadTxtContent } from '@/lib/utils/pdf'
 import { EMPRESA } from '@/lib/constants/empresa'
-import { initialPedidoData } from '@/types/pedido'
+import { initialPedidoData, initialProduct } from '@/types/pedido'
 import type { PedidoFormData } from '@/types/pedido'
 import { PhotoUpload } from '@/components/pedido/PhotoUpload'
 import { PhotoGallery } from '@/components/pedido/PhotoGallery'
@@ -166,7 +166,7 @@ export default function NovoPedidoPage() {
   }
 
   const handleReset = () => {
-    setFormData({ ...initialPedidoData, date: new Date().toLocaleDateString('pt-BR'), products: [{ item: '', structure: '', material: '', accessories: '', measure: '' }] })
+    setFormData({ ...initialPedidoData, date: new Date().toLocaleDateString('pt-BR'), products: [{ ...initialProduct }] })
     setCurrentOrderId(null)
     handleRemoveLogo()
   }

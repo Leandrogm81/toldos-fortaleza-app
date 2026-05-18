@@ -3,7 +3,10 @@ export interface Product {
   structure: string
   material: string
   accessories: string
-  measure: string
+  measure: string          // compatibilidade com documentos antigos
+  comprimento: string      // NOVO - em metros
+  largura: string          // NOVO - em metros
+  altura: string           // NOVO - em metros (espessura/profundidade)
 }
 
 export interface PedidoFormData {
@@ -33,6 +36,9 @@ export const initialProduct: Product = {
   material: '',
   accessories: '',
   measure: '',
+  comprimento: '',
+  largura: '',
+  altura: '',
 }
 
 export const initialPedidoData: PedidoFormData = {
