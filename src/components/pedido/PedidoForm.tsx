@@ -148,6 +148,28 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
     updateField('products', updated)
   }
 
+  // Cálculo de m² com regra do retrátil
+  const calcProdutoM2 = (p: Product): number => {
+    const cfg = getConfigForItem(p.item)
+    const m = p.measures && p.measures.length > 0 ? p.measures[0] : { comprimento: p.comprimento, largura: p.largura, altura: p.altura }
+    const comp = parseFloat(m.comprimento.replace(',', '.')) || 0
+    const larg = parseFloat(m.largura.replace(',', '.')) || 0
+    const alt = parseFloat(m.altura.replace(',', '.')) || 0
+
+    // Retrátil: +35cm no comprimento
+    const compCalc = p.item.toLowerCase().includes('retrátil') ? comp + 0.35 : comp
+
+    if (!cfg) return compCalc * (larg || alt)
+    if (cfg.measures.length === 2) {
+      const [a, b] = cfg.measures
+      const v1 = a === 'comprimento' ? compCalc : a === 'largura' ? larg : alt
+      const v2 = b === 'comprimento' ? compCalc : b === 'largura' ? larg : alt
+      return v1 * v2
+    }
+    if (cfg.measures.length === 3) return compCalc * larg * alt
+    return 0
+  }
+
   const handleAddProduct = () => {
     updateField('products', [...data.products, { ...initialProduct }])
   }
@@ -448,6 +470,73 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
                 </div>
               )
             })()}
+            {/* Cálculo */}
+            <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+              <p className="text-xs font-semibold text-gray-500 uppercase">Cálculo</p>
+              {/* m² */}
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-600">Área:</span>
+                <span className="font-mono font-medium">{calcProdutoM2(product).toFixed(2).replace('.', ',')} m²</span>
+                {product.item.toLowerCase().includes('retrátil') && (
+                  <span className="text-xs text-amber-600">(+35cm no comprimento)</span>
+                )}
+              </div>
+              {/* Preço por m² */}
+              <div className="flex items-center gap-2">
+                <label className="text-xs text-gray-500 w-20">R$/m²:</label>
+                <input type="text" value={product.preco_m2} onChange={(e) => updateProductField(index, 'preco_m2', e.target.value)}
+                  placeholder="0,00" className="w-24 px-2 py-1 text-sm border border-gray-300 rounded" />
+              </div>
+              {/* Calha */}
+              {(product.item.toLowerCase().includes('cobertura') || product.item.toLowerCase().includes('calha')) && (
+                <div className="space-y-1 pt-1 border-t border-gray-200">
+                  <label className="flex items-center gap-2 text-sm">
+                    <input type="checkbox" checked={product.com_calha} onChange={(e) => {
+                      const updated = data.products.map((p, i) => i === index ? { ...p, com_calha: e.target.checked } : p)
+                      updateField('products', updated)
+                    }}
+                      className="h-3.5 w-3.5 text-sky-600" />
+                    <span>Calha</span>
+                  </label>
+                  {product.com_calha && (
+                    <div className="flex items-center gap-2 pl-5">
+                      <label className="text-xs text-gray-500">R$/m:</label>
+                      <input type="text" value={product.calha_preco_m} onChange={(e) => updateProductField(index, 'calha_preco_m', e.target.value)}
+                        className="w-20 px-2 py-1 text-sm border border-gray-300 rounded" />
+                      <label className="text-xs text-gray-500">Medida (m):</label>
+                      <input type="text" value={product.calha_medida || product.comprimento} onChange={(e) => updateProductField(index, 'calha_medida', e.target.value)}
+                        placeholder={product.comprimento} className="w-20 px-2 py-1 text-sm border border-gray-300 rounded" />
+                    </div>
+                  )}
+                </div>
+              )}
+              {/* Observação (reparo etc) */}
+              <div>
+                <input type="text" value={product.observacao} onChange={(e) => updateProductField(index, 'observacao', e.target.value)}
+                  placeholder="Observação (ex: serviço de reparo...)" className="w-full px-2 py-1 text-xs border border-gray-300 rounded" />
+              </div>
+              {/* Subtotal */}
+              <div className="flex items-center justify-between pt-1 border-t border-gray-200">
+                <span className="text-xs font-medium text-gray-600">Subtotal:</span>
+                <span className="text-sm font-bold text-sky-700">
+                  {(() => {
+                    const m2 = calcProdutoM2(product)
+                    const preco = parseFloat(product.preco_m2.replace(',', '.')) || 0
+                    let sub = m2 * preco
+                    if (product.com_calha) {
+                      const calhaPreco = parseFloat(product.calha_preco_m.replace(',', '.')) || 100
+                      const calhaMedida = parseFloat((product.calha_medida || product.comprimento).replace(',', '.')) || 0
+                      sub += calhaPreco * calhaMedida
+                    }
+                    // reparo: preco manual
+                    if (getConfigForItem(product.item)?.measures.length === 0) {
+                      sub = preco // preco direto
+                    }
+                    return `R$ ${sub.toFixed(2).replace('.', ',')}`
+                  })()}
+                </span>
+              </div>
+            </div>
           </div>
         ))}
         <button type="button" onClick={handleAddProduct} className="mt-2 w-full px-4 py-2 text-sm font-medium text-sky-700 bg-sky-100 rounded-md hover:bg-sky-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors">
