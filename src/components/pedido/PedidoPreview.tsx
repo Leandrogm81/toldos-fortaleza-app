@@ -84,6 +84,7 @@ export function PedidoPreview({
               {product.item && <p style={{ margin: 0 }}><b>Item {index + 1}:</b> {product.item}</p>}
               {product.structure && <p style={{ margin: 0 }}><b>Estrutura:</b> {product.structure}</p>}
               {product.material && <p style={{ margin: 0 }}><b>Material:</b> {product.material}</p>}
+              {product.cor_material && <p style={{ margin: 0 }}><b>Cor:</b> {product.cor_material}</p>}
               {product.accessories && <p style={{ margin: 0 }}><b>Acessórios:</b> {product.accessories}</p>}
               {product.measure && <p style={{ margin: 0 }}><b>Medida:</b> {product.measure}</p>}
               {(product.measures && product.measures.length > 0) ? (

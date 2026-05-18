@@ -8,6 +8,7 @@ export interface Product {
   item: string
   structure: string
   material: string
+  cor_material: string      // NOVO - cor do material
   accessories: string
   measure: string          // compatibilidade com documentos antigos
   comprimento: string
@@ -41,6 +42,7 @@ export const initialProduct: Product = {
   item: '',
   structure: '',
   material: '',
+  cor_material: '',
   accessories: '',
   measure: '',
   comprimento: '',
