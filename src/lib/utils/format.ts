@@ -43,6 +43,16 @@ export function formatCurrency(value: string): { display: string; text: string }
   return { display, text }
 }
 
+// Formata medida: 560 → 5,60  |  140 → 1,40  |  28000 → 280,00
+export function formatMedida(digits: string): string {
+  const numbers = digits.replace(/\D/g, '')
+  if (!numbers) return ''
+  const n = parseInt(numbers, 10)
+  const int = Math.floor(n / 100)
+  const dec = (n % 100).toString().padStart(2, '0')
+  return `${int},${dec}`
+}
+
 export function parseCurrencyToNumber(value: string): number {
   return parseFloat(value.replace(/[^\d,]/g, '').replace(',', '.')) || 0
 }

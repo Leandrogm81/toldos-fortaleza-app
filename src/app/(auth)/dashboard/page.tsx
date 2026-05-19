@@ -132,15 +132,15 @@ export default function DashboardPage() {
           <div className="space-y-1">
             {recentDocs.map((doc: any) => (
               <Link key={doc.id} href={`/${doc.type === 'pedido' ? 'pedidos' : 'orcamentos'}/${doc.id}`}
-                className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-gray-50">
-                <div className="flex items-center gap-3">
-                  <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${doc.type === 'pedido' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
+                className="flex flex-col sm:flex-row sm:items-center justify-between py-2 px-3 rounded-lg hover:bg-gray-50 gap-1">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium flex-shrink-0 ${doc.type === 'pedido' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
                     {doc.type === 'pedido' ? 'Pedido' : 'Orçamento'}
                   </span>
-                  <span className="text-sm text-gray-900">{doc.doc_data?.clientName || 'Sem nome'}</span>
+                  <span className="text-sm text-gray-900 truncate">{doc.doc_data?.clientName || 'Sem nome'}</span>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-gray-500">
-                  <span>{doc.date}</span>
+                <div className="flex items-center gap-2 text-xs text-gray-500 flex-shrink-0">
+                  <span className="hidden sm:inline">{doc.date}</span>
                   <span>{doc.doc_data?.productValue || ''}</span>
                 </div>
               </Link>

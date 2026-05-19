@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { formatCpf, formatCnpj, formatPhone, formatCep, formatDate, formatCurrency } from '@/lib/utils/format'
+import { formatCpf, formatCnpj, formatPhone, formatCep, formatDate, formatCurrency, formatMedida } from '@/lib/utils/format'
 import { fetchAddressByCep } from '@/lib/utils/cep'
 import { SignaturePad, SignatureModal } from './SignaturePad'
 import { ClienteBusca } from '@/components/cliente/ClienteBusca'
@@ -117,11 +117,12 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
   }
 
   const updateMeasureField = (productIndex: number, measureIndex: number, field: 'comprimento' | 'largura' | 'altura', value: string) => {
+    const formatted = formatMedida(value)
     const updated = data.products.map((p, i) => {
       if (i !== productIndex) return p
       const measures = [...(p.measures && p.measures.length > 0 ? p.measures : [{ comprimento: p.comprimento, largura: p.largura, altura: p.altura }])]
       if (measureIndex < measures.length) {
-        measures[measureIndex] = { ...measures[measureIndex], [field]: value }
+        measures[measureIndex] = { ...measures[measureIndex], [field]: formatted }
       }
       return { ...p, measures, comprimento: measures[0]?.comprimento || '', largura: measures[0]?.largura || '', altura: measures[0]?.altura || '' }
     })
@@ -485,7 +486,7 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
               {/* Preço por m² */}
               <div className="flex items-center gap-2">
                 <label className="text-xs text-gray-500 w-20">R$/m²:</label>
-                <input type="text" value={product.preco_m2} onChange={(e) => updateProductField(index, 'preco_m2', e.target.value)}
+                <input type="text" value={product.preco_m2} onChange={(e) => updateProductField(index, 'preco_m2', formatMedida(e.target.value))}
                   placeholder="0,00" className="w-24 px-2 py-1 text-sm border border-gray-300 rounded" />
               </div>
               {/* Calha */}
