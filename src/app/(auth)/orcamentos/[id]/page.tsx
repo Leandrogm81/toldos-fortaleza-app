@@ -78,7 +78,7 @@ export default function EditarOrcamentoPage() {
   const handlePrint = async () => {
     if (!formData) return
     setIsPrinting(true)
-    try { await generatePDF('print-area', `orcamento-${(formData.clientName || '').replace(/\s+/g, '_')}.pdf`) } catch {}
+    try { await generatePDF('print-area', `orcamento-${(formData.clientName || '').replace(/\s+/g, '_')}.pdf`) } catch (err) { console.error('[orcamento] erro ao gerar PDF:', err) }
     setIsPrinting(false)
   }
 

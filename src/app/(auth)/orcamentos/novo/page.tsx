@@ -102,7 +102,7 @@ export default function NovoOrcamentoPage() {
     try {
       const name = formData.clientName.replace(/\s+/g, '_') || 'orcamento'
       await generatePDF('print-area', `orcamento-${name}.pdf`)
-    } catch {} finally {
+    } catch (err) { console.error('[orcamentos/novo] erro:', err) } finally {
       setIsPrinting(false)
     }
   }

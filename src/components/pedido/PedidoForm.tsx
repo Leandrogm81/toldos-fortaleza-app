@@ -736,7 +736,7 @@ export function PedidoForm({ data, onChange, logoSrc, onLogoChange, onRemoveLogo
           const supabase = createClient()
           const { data: { user } } = await supabase.auth.getUser()
           if (user) await supabase.from('profile').update({ company_signature_data_url: dataUrl }).eq('id', user.id)
-        } catch {}
+        } catch (err) { console.error('[PedidoForm] erro ao salvar empresa signature:', err) }
       }} />
       </>
       )}

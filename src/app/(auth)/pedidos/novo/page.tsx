@@ -49,7 +49,7 @@ export default function NovoPedidoPage() {
         if (data?.company_signature_data_url) {
           setFormData((prev) => ({ ...prev, companySignatureDataUrl: data.company_signature_data_url! }))
         }
-      } catch {}
+      } catch (err) { console.error('[pedidos/novo] erro:', err) }
     }
     loadProfile()
   }, [])

@@ -30,7 +30,7 @@ export async function listPhotos(documentId: string) {
   const supabase = createClient()
   const { data } = await supabase
     .from('attachment')
-    .select('*')
+    .select('id, document_id, type, storage_path, description, created_at')
     .eq('document_id', documentId)
     .order('created_at', { ascending: true })
   return data || []
