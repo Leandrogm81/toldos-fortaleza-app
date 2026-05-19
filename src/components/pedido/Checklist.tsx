@@ -40,6 +40,13 @@ export function Checklist({ documentId }: ChecklistProps) {
   const [confirmEnd, setConfirmEnd] = useState(false)
   const [completed, setCompleted] = useState(false)
 
+  // Employee and vehicle fields
+  const [empFabricacao, setEmpFabricacao] = useState('')
+  const [empInstalacao, setEmpInstalacao] = useState('')
+  const [veiculo, setVeiculo] = useState('')
+  const [publicToken, setPublicToken] = useState('')
+  const [copied, setCopied] = useState(false)
+
   useEffect(() => { loadSaved() }, [documentId])
 
   async function loadSaved() {
@@ -56,6 +63,10 @@ export function Checklist({ documentId }: ChecklistProps) {
       if (data.items.pre) setPreChecklist(data.items.pre)
       if (data.items.post) { setPostChecklist(data.items.post); setShowPost(true) }
       if (data.status === 'concluido') setCompleted(true)
+      if (data.employees_fabricacao) setEmpFabricacao(data.employees_fabricacao)
+      if (data.employees_instalacao) setEmpInstalacao(data.employees_instalacao)
+      if (data.veiculo) setVeiculo(data.veiculo)
+      if (data.public_token) setPublicToken(data.public_token)
     }
   }
 
@@ -77,17 +88,38 @@ export function Checklist({ documentId }: ChecklistProps) {
     setCustomText('')
   }
 
-  async function handleConcluir() {
-    setConfirmEnd(false)
-    setCompleted(true)
+  async function saveChecklist() {
     const supabase = createClient()
-    await supabase.from('checklist').upsert({
+    const token = publicToken || crypto.randomUUID().slice(0, 8)
+
+    const { data } = await supabase.from('checklist').upsert({
       document_id: documentId,
       type: 'pre_instalacao',
       items: { pre: preChecklist, post: postChecklist },
-      status: 'concluido',
-      completed_at: new Date().toISOString(),
-    }, { onConflict: 'document_id' })
+      status: completed ? 'concluido' : 'pendente',
+      employees_fabricacao: empFabricacao,
+      employees_instalacao: empInstalacao,
+      veiculo,
+      public_token: token,
+      ...(completed ? { completed_at: new Date().toISOString() } : {}),
+    }, { onConflict: 'document_id' }).select('public_token').single()
+
+    if (data?.public_token) setPublicToken(data.public_token)
+    return data?.public_token || token
+  }
+
+  async function handleConcluir() {
+    setConfirmEnd(false)
+    setCompleted(true)
+    await saveChecklist()
+  }
+
+  async function handleCopyLink() {
+    const token = await saveChecklist()
+    const link = `${window.location.origin}/checklist/${token}`
+    await navigator.clipboard.writeText(link)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 3000)
   }
 
   const preChecked = preChecklist.filter((i) => i.checked).length
@@ -100,6 +132,45 @@ export function Checklist({ documentId }: ChecklistProps) {
         {completed && (
           <span className="px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">Concluído</span>
         )}
+      </div>
+
+      {/* Employees and Vehicle */}
+      <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-3">
+        <h3 className="font-medium text-gray-800 text-sm">Equipe e Veículo</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">Fabricação</label>
+            <input
+              type="text"
+              value={empFabricacao}
+              onChange={(e) => setEmpFabricacao(e.target.value)}
+              placeholder="João, Pedro"
+              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">Instalação</label>
+            <input
+              type="text"
+              value={empInstalacao}
+              onChange={(e) => setEmpInstalacao(e.target.value)}
+              placeholder="Carlos, Lucas"
+              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">Veículo</label>
+            <select
+              value={veiculo}
+              onChange={(e) => setVeiculo(e.target.value)}
+              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md"
+            >
+              <option value="">Selecione...</option>
+              <option value="Montana">Montana</option>
+              <option value="Doblô">Doblô</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       {/* Pre-instalação */}
@@ -192,7 +263,7 @@ export function Checklist({ documentId }: ChecklistProps) {
       </div>
 
       {/* Ações */}
-      <div className="flex gap-3 pt-2">
+      <div className="flex flex-wrap gap-3 pt-2">
         {!showPost && (
           <button
             type="button"
@@ -211,7 +282,20 @@ export function Checklist({ documentId }: ChecklistProps) {
             ✓ Marcar como concluído
           </button>
         )}
+        <button
+          type="button"
+          onClick={handleCopyLink}
+          className="px-4 py-2 text-sm font-medium text-sky-700 bg-sky-100 rounded-lg hover:bg-sky-200"
+        >
+          {copied ? '✓ Link copiado!' : '🔗 Copiar link'}
+        </button>
       </div>
+
+      {publicToken && (
+        <p className="text-xs text-gray-400 mt-1">
+          Link: {window.location.origin}/checklist/{publicToken}
+        </p>
+      )}
 
       <ConfirmDialog
         open={confirmEnd}

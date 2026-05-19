@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auditoria — Toldos Fortaleza App</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+  .container { max-width: 900px; margin: 0 auto; padding: 24px; }
+  .header { background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%); color: white; border-radius: 16px; padding: 32px; margin-bottom: 24px; }
+  .header h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+  .header p { opacity: 0.9; font-size: 14px; }
+  .score-card { background: white; border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; }
+  .score-big { font-size: 64px; font-weight: 800; color: #0369a1; }
+  .score-label { font-size: 14px; color: #64748b; margin-top: 4px; }
+  .score-bar-bg { background: #e2e8f0; border-radius: 999px; height: 12px; margin: 16px auto; max-width: 400px; overflow: hidden; }
+  .score-bar-fill { background: linear-gradient(90deg, #ef4444, #f59e0b, #22c55e); border-radius: 999px; height: 100%; transition: width 0.5s; }
+  .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+  .summary-item { background: white; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .summary-item .num { font-size: 28px; font-weight: 700; }
+  .summary-item .label { font-size: 12px; color: #64748b; }
+  .critico { color: #dc2626; }
+  .importante { color: #d97706; }
+  .sugestao { color: #2563eb; }
+  .section { background: white; border-radius: 16px; padding: 24px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .section h2 { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .badge-critico { background: #fee2e2; color: #dc2626; }
+  .badge-importante { background: #fef3c7; color: #d97706; }
+  .badge-sugestao { background: #dbeafe; color: #2563eb; }
+  .finding { border-left: 4px solid; border-radius: 0 8px 8px 0; padding: 16px; margin-bottom: 12px; background: #f8fafc; }
+  .finding.critico { border-color: #dc2626; }
+  .finding.importante { border-color: #d97706; }
+  .finding.sugestao { border-color: #2563eb; }
+  .finding h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .finding p { font-size: 13px; color: #475569; margin-bottom: 4px; }
+  .finding .fix { font-size: 13px; color: #0369a1; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #cbd5e1; }
+  .finding .file { font-size: 11px; color: #94a3b8; font-family: monospace; margin-top: 4px; }
+  .next-steps { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 16px; padding: 24px; margin-top: 24px; }
+  .next-steps h2 { font-size: 18px; font-weight: 700; margin-bottom: 12px; color: #0369a1; }
+  .next-steps ol { padding-left: 20px; }
+  .next-steps li { font-size: 14px; margin-bottom: 8px; color: #334155; }
+  .footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>🔍 Auditoria de Qualidade</h1>
+    <p>Toldos Fortaleza App — 18/05/2026</p>
+    <p style="margin-top:8px; font-size:13px;">68 arquivos · 7.711 linhas de código · Next.js 16 · TypeScript · Supabase</p>
+  </div>
+
+  <div class="score-card">
+    <div class="score-big">62</div>
+    <div class="score-label">Nota Geral de Qualidade</div>
+    <div class="score-bar-bg"><div class="score-bar-fill" style="width: 62%;"></div></div>
+    <p style="font-size:13px; color:#64748b; margin-top:8px;">O projeto tem uma base sólida, mas precisa de melhorias em qualidade de código e testes.</p>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-item">
+      <div class="num critico">1</div>
+      <div class="label">Crítico</div>
+    </div>
+    <div class="summary-item">
+      <div class="num importante">5</div>
+      <div class="label">Importante</div>
+    </div>
+    <div class="summary-item">
+      <div class="num sugestao">4</div>
+      <div class="label">Sugestão</div>
+    </div>
+  </div>
+
+  <!-- SEGURANÇA -->
+  <div class="section">
+    <h2>🔒 Segurança</h2>
+
+    <div class="finding critico">
+      <span class="badge badge-critico">CRÍTICO</span>
+      <h3>Chave secreta do banco usada em página pública</h3>
+      <p>A página de orçamento público (<code>/orcamento/[token]/page.tsx</code>) usa a chave <strong>SERVICE_ROLE_KEY</strong>, que é uma chave de administrador do banco de dados. Embora ela só rode no servidor, se alguém conseguir injetar código nessa página, teria acesso total ao banco.</p>
+      <p><strong>Impacto no negócio:</strong> Um invasor poderia ler, alterar ou apagar todos os dados dos seus clientes, pedidos e orçamentos.</p>
+      <div class="fix">✅ <strong>Correção:</strong> Criar uma função server-side (API route) que faz essa busca, e a página chama a API. Assim a chave nunca fica exposta nem indiretamente.</div>
+      <div class="file">📄 src/app/orcamento/[token]/page.tsx:12-21</div>
+    </div>
+
+    <div class="finding importante">
+      <span class="badge badge-importante">IMPORTANTE</span>
+      <h3>Erros silenciosos — código engole exceções</h3>
+      <p>Existem <strong>6 pontos</strong> no código onde erros são capturados e ignorados (<code>catch {}</code>). Isso significa que se algo der errado (falha no banco, erro no PDF), você não vai saber — o app simplesmente para de funcionar sem avisar.</p>
+      <p><strong>Impacto no negócio:</strong> Você pode perder dados salvos pelo cliente sem perceber. Um orçamento que não gerou PDF, um cliente que não foi salvo.</p>
+      <div class="fix">✅ <strong>Correção:</strong> Registrar o erro com <code>console.error()</code> e mostrar uma mensagem amigável ao usuário.</div>
+      <div class="file">📄 PedidoForm.tsx:229,739 · orcamentos/novo/page.tsx:105 · pedidos/novo/page.tsx:52 · server.ts:20</div>
+    </div>
+
+    <div class="finding importante">
+      <span class="badge badge-importante">IMPORTANTE</span>
+      <h3>Vulnerabilidade conhecida em dependência (PostCSS)</h3>
+      <p>A biblioteca PostCSS (usada pelo Next.js) tem uma vulnerabilidade de segurança moderada (XSS). O <code>npm audit</code> encontrou 2 problemas.</p>
+      <p><strong>Impacto no negócio:</strong> Um atacante poderia injetar código malicioso através de CSS manipulado.</p>
+      <div class="fix">✅ <strong>Correção:</strong> Atualizar o Next.js para a versão mais recente que corrige isso. Rodar <code>npm update next</code>.</div>
+      <div class="file">📦 Dependência: postcss &lt; 8.5.10</div>
+    </div>
+  </div>
+
+  <!-- QUALIDADE DE CÓDIGO -->
+  <div class="section">
+    <h2>📝 Qualidade de Código</h2>
+
+    <div class="finding critico">
+      <span class="badge badge-critico">CRÍTICO</span>
+      <h3>Formulário de Pedido muito grande (745 linhas)</h3>
+      <p>O arquivo <code>PedidoForm.tsx</code> tem <strong>745 linhas</strong> em um único componente. Ele cuida de dados do cliente, produtos, cálculos, assinaturas, pagamento — tudo junto. Isso torna o código difícil de manter e propenso a bugs.</p>
+      <p><strong>Impacto no negócio:</strong> Cada nova feature ou correção nesse arquivo é arriscada — pode quebrar algo que estava funcionando.</p>
+      <div class="fix">✅ <strong>Correção:</strong> Dividir em componentes menores: <code>ClientInfoSection</code>, <code>ProductSection</code>, <code>PaymentSection</code>, <code>SignatureSection</code>.</div>
+      <div class="file">📄 src/components/pedido/PedidoForm.tsx (745 linhas)</div>
+    </div>
+
+    <div class="finding importante">
+      <span class="badge badge-importante">IMPORTANTE</span>
+      <h3>Uso excessivo de "any" no TypeScript</h3>
+      <p>Existem <strong>20+ usos</strong> de <code>any</code> no código, principalmente na página de agendamentos. O <code>any</code> desativa a verificação de tipos do TypeScript — é como se você estivesse escrevendo JavaScript puro, perdendo toda a segurança que o TypeScript oferece.</p>
+      <p><strong>Impacto no negócio:</strong> Erros que seriam detectados automaticamente pelo TypeScript passam despercebidos e só aparecem quando o cliente já está usando.</p>
+      <div class="fix">✅ <strong>Correção:</strong> Criar interfaces TypeScript para os dados de agendamento e documentos, substituindo todos os <code>any</code>.</div>
+      <div class="file">📄 agendamentos/page.tsx (15+ usos) · clientes/[id]/page.tsx · dashboard/page.tsx</div>
+    </div>
+
+    <div class="finding importante">
+      <span class="badge badge-importante">IMPORTANTE</span>
+      <h3>console.log esquecido em código de produção</h3>
+      <p>Existem <code>console.log</code> no componente <code>PwaRegister.tsx</code>. Esses logs aparecem no navegador do usuário e podem expor informações internas.</p>
+      <p><strong>Impacto no negócio:</strong> Informações técnicas visíveis para qualquer cliente que abrir o console do navegador.</p>
+      <div class="fix">✅ <strong>Correção:</strong> Remover os <code>console.log</code> ou substituir por um sistema de logging adequado.</div>
+      <div class="file">📄 src/components/layout/PwaRegister.tsx:11-12</div>
+    </div>
+
+    <div class="finding sugestao">
+      <span class="badge badge-sugestao">SUGESTÃO</span>
+      <h3>Estilos inline no componente de preview</h3>
+      <p>O componente <code>PedidoPreview.tsx</code> usa estilos CSS diretamente no HTML (inline styles). Isso dificulta a manutenção e impede o uso do Tailwind CSS.</p>
+      <p><strong>Impacto:</strong> Menor manutenibilidade, mas não afeta o funcionamento.</p>
+      <div class="fix">✅ <strong>Melhoria:</strong> Migrar para classes Tailwind. Como o preview é usado para PDF, manter um arquivo de estilos separado para impressão.</div>
+      <div class="file">📄 src/components/pedido/PedidoPreview.tsx (184 linhas, tudo inline)</div>
+    </div>
+  </div>
+
+  <!-- ESTRUTURA -->
+  <div class="section">
+    <h2>📁 Estrutura do Projeto</h2>
+
+    <div class="finding sugestao">
+      <span class="badge badge-sugestao">SUGESTÃO</span>
+      <h3>Auth layout faz autenticação no client-side</h3>
+      <p>O layout das páginas protegidas (<code>src/app/(auth)/layout.tsx</code>) é um <strong>client component</strong> que redireciona se não houver usuário. Isso significa que o conteúdo protegido é enviado ao navegador antes do redirecionamento.</p>
+      <p><strong>Impacto:</strong> Leve — o middleware já protege antes, mas seria mais seguro fazer a verificação no servidor.</p>
+      <div class="fix">✅ <strong>Melhoria:</strong> Mover a verificação de auth para Server Components, usando <code>redirect()</code> do Next.js diretamente.</div>
+      <div class="file">📄 src/app/(auth)/layout.tsx</div>
+    </div>
+  </div>
+
+  <!-- PERFORMANCE -->
+  <div class="section">
+    <h2>⚡ Performance</h2>
+
+    <div class="finding importante">
+      <span class="badge badge-importante">IMPORTANT</span>
+      <h3>Consultas ao banco sem limite ou select específico</h3>
+      <p>Várias consultas no dashboard e em outras páginas usam <code>select('*')</code> ou não limitam a quantidade de resultados. Isso traz dados desnecessários do banco, deixando o app mais lento.</p>
+      <p><strong>Impacto no negócio:</strong> O app pode ficar lento conforme a quantidade de dados cresce. Clientes com muitos pedidos vão perceber lentidão.</p>
+      <div class="fix">✅ <strong>Correção:</strong> Especificar só as colunas necessárias (<code>select('id, name, phone')</code>) e adicionar paginação.</div>
+      <div class="file">📄 dashboard/page.tsx · ClienteBusca.tsx · storage.ts</div>
+    </div>
+
+    <div class="finding sugestao">
+      <span class="badge badge-sugestao">SUGESTÃO</span>
+      <h3>Imagens sem otimização</h3>
+      <p>As fotos dos pedidos são exibidas usando <code>&lt;img&gt;</code> em vez do <code>&lt;Image&gt;</code> do Next.js. O Next.js otimiza imagens automaticamente (redimensionamento, formato WebP, lazy loading).</p>
+      <p><strong>Impacto:</strong> Fotos pesadas demoram para carregar, especialmente no celular.</p>
+      <div class="fix">✅ <strong>Melhoria:</strong> Usar <code>next/image</code> com <code>loading="lazy"</code> e tamanhos adequados.</div>
+      <div class="file">📄 src/components/pedido/PhotoGallery.tsx</div>
+    </div>
+  </div>
+
+  <!-- TESTES -->
+  <div class="section">
+    <h2>🧪 Testes</h2>
+
+    <div class="finding critico">
+      <span class="badge badge-critico">CRÍTICO</span>
+      <h3>Nenhum teste existe no projeto</h3>
+      <p>O projeto tem <strong>zero testes</strong>. Não há testes unitários, de integração ou de ponta a ponta. Qualquer alteração no código pode quebrar funcionalidades sem que ninguém perceba.</p>
+      <p><strong>Impacto no negócio:</strong> Cada atualização é uma aposta. Você só descobre que algo quebrou quando o cliente reclama.</p>
+      <div class="fix">✅ <strong>Correção:</strong> Começar pelos testes mais importantes:
+        <br>1. Testes das funções de cálculo (m², calha, retrátil)
+        <br>2. Testes dos formatadores (CPF, CNPJ, telefone, CEP)
+        <br>3. Testes de validação dos formulários
+        <br>4. Testes de autenticação</div>
+    </div>
+  </div>
+
+  <!-- PRÓXIMOS PASSOS -->
+  <div class="next-steps">
+    <h2>📋 Próximos Passos (Priorizados)</h2>
+    <ol>
+      <li><strong>Corrigir a vulnerabilidade do PostCSS</strong> — Rodar <code>npm update next</code> (5 minutos)</li>
+      <li><strong>Adicionar tratamento de erros</strong> — Substituir <code>catch {}</code> por logs + mensagens ao usuário (1-2 horas)</li>
+      <li><strong>Remover console.log</strong> — Limpar logs de produção (15 minutos)</li>
+      <li><strong>Criar testes das funções de cálculo</strong> — m², calha, retrátil (2-3 horas)</li>
+      <li><strong>Tipar os "any"</strong> — Criar interfaces para agendamentos e documentos (2-3 horas)</li>
+      <li><strong>Dividir o PedidoForm</strong> — Quebrar em componentes menores (meio dia)</li>
+      <li><strong>Otimizar consultas do banco</strong> — Adicionar select específico e paginação (1 hora)</li>
+      <li><strong>Melhorar a página pública de orçamento</strong> — Mover service key para API route (1 hora)</li>
+    </ol>
+  </div>
+
+  <div class="footer">
+    Auditoria gerada automaticamente · Toldos Fortaleza App · 18/05/2026
+  </div>
+</div>
+</body>
+</html>

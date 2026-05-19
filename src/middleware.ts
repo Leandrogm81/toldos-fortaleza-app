@@ -27,7 +27,8 @@ export async function middleware(request: NextRequest) {
 
   const isLoginPage = request.nextUrl.pathname.startsWith('/login')
   const isPublicOrcamento = request.nextUrl.pathname.startsWith('/orcamento/')
-  const isPublicRoute = isLoginPage || isPublicOrcamento
+  const isPublicChecklist = request.nextUrl.pathname.startsWith('/checklist/')
+  const isPublicRoute = isLoginPage || isPublicOrcamento || isPublicChecklist
 
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone()
