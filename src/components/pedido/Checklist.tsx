@@ -92,20 +92,40 @@ export function Checklist({ documentId }: ChecklistProps) {
     const supabase = createClient()
     const token = publicToken || crypto.randomUUID().slice(0, 8)
 
-    const { data } = await supabase.from('checklist').upsert({
-      document_id: documentId,
-      type: 'pre_instalacao',
-      items: { pre: preChecklist, post: postChecklist },
-      status: completed ? 'concluido' : 'pendente',
-      employees_fabricacao: empFabricacao,
-      employees_instalacao: empInstalacao,
-      veiculo,
-      public_token: token,
-      ...(completed ? { completed_at: new Date().toISOString() } : {}),
-    }, { onConflict: 'document_id' }).select('public_token').single()
+    // Verifica se já existe
+    const { data: existing } = await supabase
+      .from('checklist')
+      .select('id, public_token')
+      .eq('document_id', documentId)
+      .maybeSingle()
 
-    if (data?.public_token) setPublicToken(data.public_token)
-    return data?.public_token || token
+    if (existing) {
+      await supabase.from('checklist').update({
+        items: { pre: preChecklist, post: postChecklist },
+        status: completed ? 'concluido' : 'pendente',
+        employees_fabricacao: empFabricacao,
+        employees_instalacao: empInstalacao,
+        veiculo,
+        public_token: token,
+        ...(completed ? { completed_at: new Date().toISOString() } : {}),
+      }).eq('id', existing.id)
+      if (!existing.public_token) setPublicToken(token)
+      return existing.public_token || token
+    } else {
+      await supabase.from('checklist').insert({
+        document_id: documentId,
+        type: 'pre_instalacao',
+        items: { pre: preChecklist, post: postChecklist },
+        status: completed ? 'concluido' : 'pendente',
+        employees_fabricacao: empFabricacao,
+        employees_instalacao: empInstalacao,
+        veiculo,
+        public_token: token,
+        ...(completed ? { completed_at: new Date().toISOString() } : {}),
+      })
+      setPublicToken(token)
+      return token
+    }
   }
 
   async function handleConcluir() {

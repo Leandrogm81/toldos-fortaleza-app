@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auditoria Toldos Fortaleza - 19/05/2026</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+  .container { max-width: 960px; margin: 0 auto; padding: 24px; }
+  h1 { font-size: 28px; margin-bottom: 4px; color: #0f172a; }
+  .subtitle { color: #64748b; font-size: 14px; margin-bottom: 32px; }
+  .score-card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 24px; }
+  .score-circle { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; flex-shrink: 0; }
+  .score-circle.good { background: #dcfce7; color: #16a34a; }
+  .score-circle.warn { background: #fef3c7; color: #d97706; }
+  .score-circle.bad { background: #fee2e2; color: #dc2626; }
+  .score-text h2 { font-size: 18px; margin-bottom: 4px; }
+  .score-text p { color: #64748b; font-size: 14px; }
+  .section { background: white; border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .section h3 { font-size: 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  .badge.crit { background: #fee2e2; color: #dc2626; }
+  .badge.warn { background: #fef3c7; color: #d97706; }
+  .badge.ok { background: #dcfce7; color: #16a34a; }
+  .badge.info { background: #dbeafe; color: #2563eb; }
+  .item { padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+  .item:last-child { border-bottom: none; }
+  .item-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .item-desc { font-size: 13px; color: #64748b; }
+  .item-file { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .quick-wins { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+  .quick-wins h3 { color: #16a34a; margin-bottom: 12px; }
+  .quick-wins ol { padding-left: 20px; }
+  .quick-wins li { margin-bottom: 8px; font-size: 14px; }
+  .debt { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+  .debt h3 { color: #d97706; margin-bottom: 12px; }
+  .debt ul { padding-left: 20px; }
+  .debt li { margin-bottom: 8px; font-size: 14px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .stat { background: white; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .stat-num { font-size: 24px; font-weight: 700; }
+  .stat-label { font-size: 12px; color: #64748b; margin-top: 4px; }
+  .dark-mode-alert { background: #fef2f2; border: 2px solid #dc2626; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+  .dark-mode-alert h3 { color: #dc2626; margin-bottom: 8px; }
+  .dark-mode-alert p { font-size: 14px; color: #7f1d1d; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Auditoria Toldos Fortaleza</h1>
+<p class="subtitle">Gerada em 19/05/2026 - 73 arquivos fonte analisados</p>
+
+<!-- SCORE -->
+<div class="score-card">
+  <div class="score-circle warn">B</div>
+  <div class="score-text">
+    <h2>Nota Geral: Bom com ressalvas</h2>
+    <p>O projeto esta funcional e bem estruturado, mas tem 3 problemas de seguranca que precisam de atencao e 1 funcionalidade nao solicitada (dark mode).</p>
+  </div>
+</div>
+
+<!-- DARK MODE ALERT -->
+<div class="dark-mode-alert">
+  <h3>ATENCAO: Dark Mode detectado!</h3>
+  <p>O arquivo <code>src/components/layout/ThemeToggle.tsx</code> contem logica completa de dark mode (toggle, localStorage, classe <code>.dark</code> no HTML). O usuario rejeitou dark mode anteriormente. Este componente deveria ser removido ou desabilitado.</p>
+</div>
+
+<!-- SUMMARY STATS -->
+<div class="summary-grid">
+  <div class="stat">
+    <div class="stat-num" style="color:#16a34a">0</div>
+    <div class="stat-label">Chaves expostas</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" style="color:#d97706">3</div>
+    <div class="stat-label">Catches silenciosos</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" style="color:#16a34a">0</div>
+    <div class="stat-label">console.log</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" style="color:#d97706">32</div>
+    <div class="stat-label">Usos de ': any'</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" style="color:#d97706">4</div>
+    <div class="stat-label">Arquivos >300 linhas</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" style="color:#16a34a">0</div>
+    <div class="stat-label">select('*')</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" style="color:#d97706">6</div>
+    <div class="stat-label">&lt;img&gt; nativos</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" style="color:#dc2626">0</div>
+    <div class="stat-label">Arquivos de teste</div>
+  </div>
+</div>
+
+<!-- SEGURANCA -->
+<div class="section">
+  <h3>Seguranca <span class="badge warn">3 problemas</span></h3>
+
+  <div class="item">
+    <div class="item-title"><span class="badge crit">CRITICO</span> Catch silencioso - orcamento/page.tsx:16</div>
+    <div class="item-desc">Se a API de orcamento falha, o usuario recebe a pagina sem dados sem nenhum erro. A pagina carrega "vazia" silenciosamente, confundindo o cliente que esta visualizando o orcamento.</div>
+    <div class="item-file">src/app/orcamento/[token]/page.tsx:16</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title"><span class="badge warn">MEDIO</span> Catch silencioso - PedidoForm.tsx:229</div>
+    <div class="item-desc">Se o upload da assinatura da empresa falha, o usuario nao recebe feedback. A modal fecha como se tivesse dado certo.</div>
+    <div class="item-file">src/components/pedido/PedidoForm.tsx:229</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title"><span class="badge warn">MEDIO</span> Catch silencioso - pedidos/[id]/page.tsx:67</div>
+    <div class="item-desc">Se a geracao de PDF falha, o botao sai do estado de loading mas o usuario nao sabe que o PDF nao foi gerado.</div>
+    <div class="item-file">src/app/(auth)/pedidos/[id]/page.tsx:67</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title"><span class="badge ok">OK</span> NEXT_PUBLIC_SUPABASE_URL hardcoded com fallback</div>
+    <div class="item-desc">Em orcamento/page.tsx:12, a URL tem um fallback hardcoded para vercel.app. Isso e aceitavel pois e uma URL publica (anon key), mas o fallback deveria usar window.location.origin em vez de fixar a URL.</div>
+    <div class="item-file">src/app/orcamento/[token]/page.tsx:12</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title"><span class="badge ok">OK</span> Nenhuma chave secreta exposta</div>
+    <div class="item-desc">Todas as credenciais usam process.env corretamente. Nenhum token, senha ou chave privada hardcoded.</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title"><span class="badge ok">OK</span> Middleware protege rotas corretamente</div>
+    <div class="item-desc">Redireciona para /login se nao autenticado, permite acesso publico a /orcamento/ e /checklist/.</div>
+  </div>
+</div>
+
+<!-- QUALIDADE -->
+<div class="section">
+  <h3>Qualidade de Codigo <span class="badge warn">2 problemas</span></h3>
+
+  <div class="item">
+    <div class="item-title"><span class="badge warn">MEDIO</span> 32 usos de ': any' encontrados</div>
+    <div class="item-desc">Principalmente em agendamentos/page.tsx (18x), clientes/[id]/page.tsx (2x), dashboard/page.tsx (1x), orcamento/page.tsx (3x), producao/page.tsx (1x), PedidoPreview.tsx (1x). Isso desabilita a checagem de tipos do TypeScript e pode esconder bugs.</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title"><span class="badge ok">OK</span> Nenhum console.log esquecido</div>
+    <div class="item-desc">Codigo limpo de debug.</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title"><span class="badge ok">OK</span> 11 usos de useMemo/useCallback</div>
+    <div class="item-desc">Boa preocupacao com performance de renderizacao.</div>
+  </div>
+</div>
+
+<!-- ESTRUTURA -->
+<div class="section">
+  <h3>Estrutura <span class="badge warn">1 problema</span></h3>
+
+  <div class="item">
+    <div class="item-title"><span class="badge warn">MEDIO</span> 4 arquivos com mais de 300 linhas</div>
+    <div class="item-desc">
+      <strong>PedidoForm.tsx</strong> (745 linhas) - Muito grande. Dividir em subcomponentes: ProductSection, ClientSection, SignatureSection, PaymentSection.<br>
+      <strong>agendamentos/page.tsx</strong> (432 linhas) - Extrair ApptCard e DeadlineAlert para componentes separados.<br>
+      <strong>ClienteForm.tsx</strong> (317 linhas) - Aceitavel, mas pode ser dividido.<br>
+      <strong>Checklist.tsx</strong> (309 linhas) - Aceitavel.
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-title"><span class="badge ok">OK</span> 16 componentes UI reutilizaveis</div>
+    <div class="item-desc">Boa base de componentes: button, card, dialog, input, select, table, etc.</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title"><span class="badge ok">OK</span> 3 arquivos de tipos (appointment, client, pedido)</div>
+    <div class="item-desc">Tipos centralizados em src/types/.</div>
+  </div>
+</div>
+
+<!-- PERFORMANCE -->
+<div class="section">
+  <h3>Performance <span class="badge warn">1 problema</span></h3>
+
+  <div class="item">
+    <div class="item-title"><span class="badge warn">MEDIO</span> 6 usos de &lt;img&gt; nativo em vez de next/image</div>
+    <div class="item-desc">Encontrados em orcamento/page.tsx (logo), PedidoForm.tsx (2x assinaturas), PedidoPreview.tsx (logo + 2x assinaturas). O next/image otimiza automaticamente: redimensionamento, lazy loading, formatos modernos. Para imagens de assinatura (base64) o impacto e menor, mas o logo deveria usar next/image.</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title"><span class="badge ok">OK</span> Nenhum .select('*') encontrado</div>
+    <div class="item-desc">Todas as queries do Supabase especificam colunas.</div>
+  </div>
+</div>
+
+<!-- TESTES -->
+<div class="section">
+  <h3>Testes <span class="badge crit">1 problema</span></h3>
+
+  <div class="item">
+    <div class="item-title"><span class="badge crit">CRITICO</span> Nenhum teste automatizado</div>
+    <div class="item-desc">Nao existe nenhum arquivo .test.ts ou .spec.ts no codigo do projeto. Qualquer mudanca pode quebrar funcionalidades sem que ninguem perceba. Recomendado: pelo menos testes para calculo de m2, geracao de PDF, e fluxo de orcamento.</div>
+  </div>
+</div>
+
+<!-- QUICK WINS -->
+<div class="quick-wins">
+  <h3>Quick Wins (facam rapido, alto impacto)</h3>
+  <ol>
+    <li><strong>Remover ThemeToggle.tsx</strong> - O usuario nao quer dark mode. Remover o componente e sua referencia no Header.</li>
+    <li><strong>Corrigir catch do orcamento</strong> - Adicionar mensagem de erro visivel quando a API falha (orcamento/page.tsx:16).</li>
+    <li><strong>Corrigir catch do PDF</strong> - Mostrar alerta quando a geracao de PDF falha (pedidos/[id]/page.tsx:67).</li>
+    <li><strong>Corrigir catch da assinatura</strong> - Mostrar erro quando upload da assinatura falha (PedidoForm.tsx:229).</li>
+    <li><strong>Trocar &lt;img&gt; do logo</strong> - Usar next/image para o logo em orcamento/page.tsx e PedidoPreview.tsx.</li>
+  </ol>
+</div>
+
+<!-- TECHNICAL DEBT -->
+<div class="debt">
+  <h3>Technical Debt (melhorias a medio prazo)</h3>
+  <ul>
+    <li><strong>Dividir PedidoForm.tsx</strong> (745 linhas) em pelo menos 3-4 subcomponentes. E o arquivo mais complexo do projeto.</li>
+    <li><strong>Substituir ': any' por tipos corretos</strong> - Comecar por agendamentos/page.tsx que tem 18 usos.</li>
+    <li><strong>Adicionar testes</strong> - Pelo menos testes unitarios para calculo de m2 e testes de integracao para o fluxo de orcamento.</li>
+    <li><strong>Melhorar fallback de URL</strong> - Em orcamento/page.tsx:12, usar window.location.origin em vez de URL hardcoded.</li>
+    <li><strong>Dividir agendamentos/page.tsx</strong> (432 linhas) - Extrair ApptCard e DeadlineAlert.</li>
+  </ul>
+</div>
+
+<p style="text-align:center;color:#94a3b8;font-size:12px;margin-top:32px;">
+  Auditoria gerada automaticamente por OWL - 19/05/2026
+</p>
+
+</div>
+</body>
+</html>
