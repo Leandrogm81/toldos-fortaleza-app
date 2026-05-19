@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-05-18T22:30:00-03:00",
+  "score": 58,
+  "status": "ATENCAO",
+  "build_ok": true,
+  "ts_ok": true,
+  "lint_ok": true,
+  "vuln_count": 2,
+  "any_count": 84,
+  "catch_vazio": 1,
+  "console_log": 0,
+  "test_count": 0,
+  "total_files": 73,
+  "total_lines": 8213
+}

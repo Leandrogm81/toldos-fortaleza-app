@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cão de Guarda — Toldos Fortaleza</title>
+<meta http-equiv="refresh" content="300">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; line-height: 1.6; }
+.container { max-width: 800px; margin: 0 auto; padding: 24px; }
+.header { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); border-radius: 16px; padding: 24px; margin-bottom: 20px; border: 1px solid #475569; }
+.header h1 { font-size: 20px; font-weight: 700; }
+.header .subtitle { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+.status-badge { display: inline-block; padding: 4px 16px; border-radius: 999px; font-size: 14px; font-weight: 600; background: #f59e0b20; color: #f59e0b; border: 1px solid #f59e0b40; }
+.score-card { background: #1e293b; border-radius: 16px; padding: 20px; margin-bottom: 16px; text-align: center; border: 1px solid #475569; }
+.score-big { font-size: 56px; font-weight: 800; color: #f59e0b; }
+.score-label { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+.card { background: #1e293b; border-radius: 12px; padding: 16px; border: 1px solid #475569; }
+.card h3 { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.card .value { font-size: 24px; font-weight: 700; }
+.ok { color: #22c55e; }
+.warn { color: #f59e0b; }
+.err { color: #dc2626; }
+.neutral { color: #e2e8f0; }
+.full { grid-column: 1 / -1; }
+.footer { text-align: center; padding: 16px; color: #475569; font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🐕 Cão de Guarda — Toldos Fortaleza</h1>
+    <p class="subtitle">Última verificação: 18/05/2026 22:30 | Branch: main</p>
+    <span class="status-badge">🟡 ATENÇÃO</span>
+  </div>
+  <div class="score-card">
+    <div class="score-big">58</div>
+    <div class="score-label">Score de Saúde do Projeto</div>
+  </div>
+  <div class="grid">
+    <div class="card"><h3>Build</h3><div class="value ok">✅ Passou</div></div>
+    <div class="card"><h3>TypeScript</h3><div class="value ok">✅ Sem erros</div></div>
+    <div class="card"><h3>ESLint</h3><div class="value ok">✅ Limpo</div></div>
+    <div class="card"><h3>Vulnerabilidades</h3><div class="value warn">2 encontradas</div></div>
+    <div class="card"><h3>Arquivos / Linhas</h3><div class="value neutral">73 / 8213</div></div>
+    <div class="card"><h3>Testes</h3><div class="value warn">0 arquivos</div></div>
+    <div class="card"><h3>Uso de "any"</h3><div class="value warn">84 ocorrências</div></div>
+    <div class="card"><h3>Erros silenciosos</h3><div class="value warn">1 catch vazio</div></div>
+    <div class="card"><h3>console.log</h3><div class="value ok">0 encontrados</div></div>
+    <div class="card"><h3>Git</h3><div class="value ok">✅ Tudo commitado</div></div>
+  </div>
+  <div class="card full">
+    <h3>ℹ️ Sobre este dashboard</h3>
+    <p style="font-size:13px; color:#94a3b8;">
+      Este relatório é atualizado automaticamente a cada 30 minutos pelo Cão de Guarda.
+      Se algo der errado, você receberá uma mensagem no Telegram.
+      Para verificar manualmente, rode: <code style="background:#334155;padding:2px 6px;border-radius:4px;">bash ~/.hermes/scripts/guardian.sh</code>
+    </p>
+  </div>
+  <div class="footer">Cão de Guarda v1.0 — Toldos Fortaleza App — 18/05/2026</div>
+</div>
+</body>
+</html>

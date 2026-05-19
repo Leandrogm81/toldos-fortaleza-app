@@ -27,24 +27,19 @@ export default function ChecklistPublicPage({ params }: { params: Promise<{ toke
   }, [params])
 
   async function loadChecklist(token: string) {
-    const supabase = createClient()
-    const { data, error } = await supabase
-      .from('checklist')
-      .select('id, items, status')
-      .eq('public_token', token)
-      .single()
-
-    if (error || !data) {
+    try {
+      const res = await fetch(`/api/checklist/${token}`)
+      if (!res.ok) { setNotFound(true); setLoading(false); return }
+      const data = await res.json()
+      setChecklistId(data.id)
+      if (data.items?.pre) setPreChecklist(data.items.pre)
+      if (data.items?.post) { setPostChecklist(data.items.post); setShowPost(true) }
+      if (data.status === 'concluido') setConcluded(true)
+      setLoading(false)
+    } catch {
       setNotFound(true)
       setLoading(false)
-      return
     }
-
-    setChecklistId(data.id)
-    if (data.items?.pre) setPreChecklist(data.items.pre)
-    if (data.items?.post) { setPostChecklist(data.items.post); setShowPost(true) }
-    if (data.status === 'concluido') setConcluded(true)
-    setLoading(false)
   }
 
   function toggleItem(list: 'pre' | 'post', id: string) {
@@ -54,14 +49,20 @@ export default function ChecklistPublicPage({ params }: { params: Promise<{ toke
   }
 
   async function handleConclude() {
-    const supabase = createClient()
-    await supabase.from('checklist').update({
-      items: { pre: preChecklist, post: postChecklist },
-      status: 'concluido',
-      completed_at: new Date().toISOString(),
-    }).eq('id', checklistId)
-
-    setConcluded(true)
+    try {
+      await fetch(`/api/checklist/${token}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: { pre: preChecklist, post: postChecklist },
+          status: 'concluido',
+          completed_at: new Date().toISOString(),
+        }),
+      })
+      setConcluded(true)
+    } catch (err) {
+      console.error('[checklist] erro ao concluir:', err)
+    }
   }
 
   if (loading) {
