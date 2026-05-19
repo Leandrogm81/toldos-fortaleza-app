@@ -8,6 +8,7 @@ import { PedidoPreview } from '@/components/pedido/PedidoPreview'
 import { generatePDF } from '@/lib/utils/pdf'
 import { PhotoUpload } from '@/components/pedido/PhotoUpload'
 import { PhotoGallery } from '@/components/pedido/PhotoGallery'
+import { Checklist } from '@/components/pedido/Checklist'
 import { initialPedidoData } from '@/types/pedido'
 import type { PedidoFormData } from '@/types/pedido'
 import Link from 'next/link'
@@ -140,6 +141,13 @@ export default function EditarPedidoPage() {
           <div className="mt-4">
             <PhotoGallery documentId={id} refreshKey={photoRefresh} />
           </div>
+        </div>
+      </div>
+
+      {/* Checklist Section */}
+      <div className="max-w-screen-2xl mx-auto px-2 sm:px-6 lg:px-8 pb-8">
+        <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 sm:p-6">
+          <Checklist documentId={id} />
         </div>
       </div>
     </div>
