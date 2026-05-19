@@ -7,7 +7,7 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
-  .container { max-width: 900px; margin: 0 auto; padding: 24px; }
+  .container { max-width: 960px; margin: 0 auto; padding: 24px; }
   .header { background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%); color: white; border-radius: 16px; padding: 32px; margin-bottom: 24px; }
   .header h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
   .header p { opacity: 0.9; font-size: 14px; }
@@ -15,7 +15,7 @@
   .score-big { font-size: 64px; font-weight: 800; color: #0369a1; }
   .score-label { font-size: 14px; color: #64748b; margin-top: 4px; }
   .score-bar-bg { background: #e2e8f0; border-radius: 999px; height: 12px; margin: 16px auto; max-width: 400px; overflow: hidden; }
-  .score-bar-fill { background: linear-gradient(90deg, #ef4444, #f59e0b, #22c55e); border-radius: 999px; height: 100%; transition: width 0.5s; }
+  .score-bar-fill { background: linear-gradient(90deg, #ef4444, #f59e0b, #22c55e); border-radius: 999px; height: 100%; }
   .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
   .summary-item { background: white; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
   .summary-item .num { font-size: 28px; font-weight: 700; }
@@ -42,37 +42,38 @@
   .next-steps ol { padding-left: 20px; }
   .next-steps li { font-size: 14px; margin-bottom: 8px; color: #334155; }
   .footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; }
+  .metric-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
+  .metric { background: #f1f5f9; border-radius: 8px; padding: 8px 12px; }
+  .metric .val { font-size: 18px; font-weight: 700; color: #0369a1; }
+  .metric .lbl { font-size: 11px; color: #64748b; }
 </style>
 </head>
 <body>
 <div class="container">
 
   <div class="header">
-    <h1>🔍 Auditoria de Qualidade</h1>
+    <h1>🔍 Auditoria de Qualidade — 2ª Rodada</h1>
     <p>Toldos Fortaleza App — 18/05/2026</p>
-    <p style="margin-top:8px; font-size:13px;">68 arquivos · 7.711 linhas de código · Next.js 16 · TypeScript · Supabase</p>
+    <p style="margin-top:8px; font-size:13px;">68 arquivos · 7.711 linhas · Next.js 16 · TypeScript · Supabase · Análise completa</p>
   </div>
 
   <div class="score-card">
-    <div class="score-big">62</div>
+    <div class="score-big">58</div>
     <div class="score-label">Nota Geral de Qualidade</div>
-    <div class="score-bar-bg"><div class="score-bar-fill" style="width: 62%;"></div></div>
-    <p style="font-size:13px; color:#64748b; margin-top:8px;">O projeto tem uma base sólida, mas precisa de melhorias em qualidade de código e testes.</p>
+    <div class="score-bar-bg"><div class="score-bar-fill" style="width: 58%;"></div></div>
+    <p style="font-size:13px; color:#64748b; margin-top:8px;">O projeto funciona, mas tem débito técnico significativo. Os maiores riscos são: componente monolítico, zero testes, e erros silenciosos.</p>
+    <div class="metric-grid">
+      <div class="metric"><div class="val">745</div><div class="lbl">linhas no maior arquivo</div></div>
+      <div class="metric"><div class="val">~25</div><div class="lbl">usos de "any"</div></div>
+      <div class="metric"><div class="val">6</div><div class="lbl">erros silenciosos (catch vazio)</div></div>
+      <div class="metric"><div class="val">11</div><div class="lbl">consultas com select('*')</div></div>
+    </div>
   </div>
 
   <div class="summary-grid">
-    <div class="summary-item">
-      <div class="num critico">1</div>
-      <div class="label">Crítico</div>
-    </div>
-    <div class="summary-item">
-      <div class="num importante">5</div>
-      <div class="label">Importante</div>
-    </div>
-    <div class="summary-item">
-      <div class="num sugestao">4</div>
-      <div class="label">Sugestão</div>
-    </div>
+    <div class="summary-item"><div class="num critico">2</div><div class="label">Crítico</div></div>
+    <div class="summary-item"><div class="num importante">6</div><div class="label">Importante</div></div>
+    <div class="summary-item"><div class="num sugestao">5</div><div class="label">Sugestão</div></div>
   </div>
 
   <!-- SEGURANÇA -->
@@ -81,29 +82,29 @@
 
     <div class="finding critico">
       <span class="badge badge-critico">CRÍTICO</span>
-      <h3>Chave secreta do banco usada em página pública</h3>
-      <p>A página de orçamento público (<code>/orcamento/[token]/page.tsx</code>) usa a chave <strong>SERVICE_ROLE_KEY</strong>, que é uma chave de administrador do banco de dados. Embora ela só rode no servidor, se alguém conseguir injetar código nessa página, teria acesso total ao banco.</p>
-      <p><strong>Impacto no negócio:</strong> Um invasor poderia ler, alterar ou apagar todos os dados dos seus clientes, pedidos e orçamentos.</p>
-      <div class="fix">✅ <strong>Correção:</strong> Criar uma função server-side (API route) que faz essa busca, e a página chama a API. Assim a chave nunca fica exposta nem indiretamente.</div>
+      <h3>Chave SERVICE_ROLE_KEY usada diretamente em página server-side</h3>
+      <p>A página <code>/orcamento/[token]/page.tsx</code> instancia <code>createServerClient</code> com a chave <strong>SUPABASE_SERVICE_ROLE_KEY</strong> diretamente no componente. Embora rode no servidor, isso significa que a chave de administrador do banco está espalhada no código da aplicação. Se houver qualquer vazamento de erro SSR ou log, a key pode ser exposta.</p>
+      <p><strong>Impacto no negóbio:</strong> Um invasor com acesso à key pode ler, alterar ou apagar TODOS os dados — clientes, pedidos, orçamentos, tudo.</p>
+      <div class="fix">✅ <strong>Correção:</strong> Criar uma API route (<code>app/api/orcamento/[token]/route.ts</code>) que encapsula a consulta. A página chama a API. A key fica isolada no servidor.</div>
       <div class="file">📄 src/app/orcamento/[token]/page.tsx:12-21</div>
     </div>
 
     <div class="finding importante">
       <span class="badge badge-importante">IMPORTANTE</span>
-      <h3>Erros silenciosos — código engole exceções</h3>
-      <p>Existem <strong>6 pontos</strong> no código onde erros são capturados e ignorados (<code>catch {}</code>). Isso significa que se algo der errado (falha no banco, erro no PDF), você não vai saber — o app simplesmente para de funcionar sem avisar.</p>
-      <p><strong>Impacto no negócio:</strong> Você pode perder dados salvos pelo cliente sem perceber. Um orçamento que não gerou PDF, um cliente que não foi salvo.</p>
-      <div class="fix">✅ <strong>Correção:</strong> Registrar o erro com <code>console.error()</code> e mostrar uma mensagem amigável ao usuário.</div>
-      <div class="file">📄 PedidoForm.tsx:229,739 · orcamentos/novo/page.tsx:105 · pedidos/novo/page.tsx:52 · server.ts:20</div>
+      <h3>6 erros silenciosos — código engole exceções sem avisar</h3>
+      <p>Existem <strong>6 pontos</strong> no código onde erros são capturados e completamente ignorados (<code>catch {}</code>). Se algo der errado — falha no banco, erro ao gerar PDF, falha ao salvar assinatura — o app simplesmente para de funcionar sem mostrar nenhuma mensagem.</p>
+      <p><strong>Impacto no negócio:</strong> Você pode perder dados que o cliente achou que salvou. Um orçamento que não gerou PDF, um cliente que não foi salvo, uma assinatura que desapareceu.</p>
+      <div class="fix">✅ <strong>Correção:</strong> Substituir todos os <code>catch {}</code> por <code>catch (err) { console.error('[contexto]', err); }</code> e mostrar mensagem amigável ao usuário.</div>
+      <div class="file">📄 PedidoForm.tsx:229,739 · orcamentos/novo/page.tsx:105 · pedidos/novo/page.tsx:52 · orcamentos/[id]/page.tsx:81 · server.ts:20</div>
     </div>
 
     <div class="finding importante">
       <span class="badge badge-importante">IMPORTANTE</span>
-      <h3>Vulnerabilidade conhecida em dependência (PostCSS)</h3>
-      <p>A biblioteca PostCSS (usada pelo Next.js) tem uma vulnerabilidade de segurança moderada (XSS). O <code>npm audit</code> encontrou 2 problemas.</p>
+      <h3>Vulnerabilidade conhecida em dependência (PostCSS XSS)</h3>
+      <p>A biblioteca PostCSS (usada pelo Next.js) tem uma vulnerabilidade de segurança moderada — <strong>XSS via CSS</strong> (CVE GHSA-qx2v-qp2m-jg93, CVSS 6.1). O <code>npm audit</code> encontrou 2 problemas.</p>
       <p><strong>Impacto no negócio:</strong> Um atacante poderia injetar código malicioso através de CSS manipulado.</p>
-      <div class="fix">✅ <strong>Correção:</strong> Atualizar o Next.js para a versão mais recente que corrige isso. Rodar <code>npm update next</code>.</div>
-      <div class="file">📦 Dependência: postcss &lt; 8.5.10</div>
+      <div class="fix">✅ <strong>Correção:</strong> Rodar <code>npm update next</code> para atualizar para versão com PostCSS >= 8.5.10.</div>
+      <div class="file">📦 postcss &lt; 8.5.10 (via Next.js)</div>
     </div>
   </div>
 
@@ -113,38 +114,43 @@
 
     <div class="finding critico">
       <span class="badge badge-critico">CRÍTICO</span>
-      <h3>Formulário de Pedido muito grande (745 linhas)</h3>
-      <p>O arquivo <code>PedidoForm.tsx</code> tem <strong>745 linhas</strong> em um único componente. Ele cuida de dados do cliente, produtos, cálculos, assinaturas, pagamento — tudo junto. Isso torna o código difícil de manter e propenso a bugs.</p>
-      <p><strong>Impacto no negócio:</strong> Cada nova feature ou correção nesse arquivo é arriscada — pode quebrar algo que estava funcionando.</p>
-      <div class="fix">✅ <strong>Correção:</strong> Dividir em componentes menores: <code>ClientInfoSection</code>, <code>ProductSection</code>, <code>PaymentSection</code>, <code>SignatureSection</code>.</div>
-      <div class="file">📄 src/components/pedido/PedidoForm.tsx (745 linhas)</div>
+      <h3>PedidoForm.tsx — componente monolítico de 745 linhas</h3>
+      <p>O arquivo <code>PedidoForm.tsx</code> tem <strong>745 linhas</strong> e <strong>14 hooks</strong> (useState, useEffect, useCallback, useRef). Ele cuida de: dados do cliente, busca CEP, produtos, medidas, cálculos de m², calha, assinaturas, pagamento, máscaras de input, upload de fotos, e muito mais — tudo em um único componente.</p>
+      <p><strong>Impacto no negócio:</strong> Cada nova feature ou correção nesse arquivo é arriscada. Pode quebrar algo que estava funcionando. Um desenvolvedor novo leva horas para entender o código.</p>
+      <div class="fix">✅ <strong>Correção:</strong> Dividir em componentes menores:
+        <br>• <code>ClientInfoSection.tsx</code> — dados do cliente + busca CEP
+        <br>• <code>ProductSection.tsx</code> — lista de produtos + autocomplete
+        <br>• <code>ProductMeasure.tsx</code> — medidas individuais
+        <br>• <code>PaymentSection.tsx</code> — forma de pagamento
+        <br>• <code>SignatureSection.tsx</code> — assinaturas
+        <br>• <code>PedidoForm.tsx</code> — orquestrador (~150 linhas)</div>
+      <div class="file">📄 src/components/pedido/PedidoForm.tsx (745 linhas, 14 hooks)</div>
     </div>
 
     <div class="finding importante">
       <span class="badge badge-importante">IMPORTANTE</span>
-      <h3>Uso excessivo de "any" no TypeScript</h3>
-      <p>Existem <strong>20+ usos</strong> de <code>any</code> no código, principalmente na página de agendamentos. O <code>any</code> desativa a verificação de tipos do TypeScript — é como se você estivesse escrevendo JavaScript puro, perdendo toda a segurança que o TypeScript oferece.</p>
-      <p><strong>Impacto no negócio:</strong> Erros que seriam detectados automaticamente pelo TypeScript passam despercebidos e só aparecem quando o cliente já está usando.</p>
-      <div class="fix">✅ <strong>Correção:</strong> Criar interfaces TypeScript para os dados de agendamento e documentos, substituindo todos os <code>any</code>.</div>
-      <div class="file">📄 agendamentos/page.tsx (15+ usos) · clientes/[id]/page.tsx · dashboard/page.tsx</div>
+      <h3>~25 usos de "any" no TypeScript — tipagem desativada</h3>
+      <p>O código tem aproximadamente <strong>25 usos de <code>any</code></strong>, principalmente na página de agendamentos (18 só nela). O <code>any</code> desativa completamente a verificação de tipos do TypeScript — é como escrever JavaScript puro, perdendo toda a segurança que o TypeScript oferece.</p>
+      <p><strong>Impacto no negócio:</strong> Erros que seriam detectados automaticamente pelo TypeScript passam despercebidos e só aparecem quando o cliente já está usando o app.</p>
+      <div class="fix">✅ <strong>Correção:</strong> Criar interfaces TypeScript para: <code>Appointment</code>, <code>DocumentSummary</code>, <code>DeadlineOrder</code>, <code>ClientWithDocs</code>. Substituir todos os <code>any</code>.</div>
+      <div class="file">📄 agendamentos/page.tsx (18) · clientes/[id]/page.tsx (2) · dashboard/page.tsx (1) · PedidoForm.tsx (2) · orcamentos/novo (2)</div>
     </div>
 
     <div class="finding importante">
       <span class="badge badge-importante">IMPORTANTE</span>
-      <h3>console.log esquecido em código de produção</h3>
-      <p>Existem <code>console.log</code> no componente <code>PwaRegister.tsx</code>. Esses logs aparecem no navegador do usuário e podem expor informações internas.</p>
-      <p><strong>Impacto no negócio:</strong> Informações técnicas visíveis para qualquer cliente que abrir o console do navegador.</p>
-      <div class="fix">✅ <strong>Correção:</strong> Remover os <code>console.log</code> ou substituir por um sistema de logging adequado.</div>
+      <h3>console.log em código de produção</h3>
+      <p>Existem <code>console.log</code> no componente <code>PwaRegister.tsx</code>. Esses logs aparecem no navegador do usuário e podem expor informações internas do app.</p>
+      <p><strong>Impacto no negócio:</strong> Informações técnicas visíveis para qualquer cliente que abrir o console do navegador (F12).</p>
+      <div class="fix">✅ <strong>Correção:</strong> Remover os <code>console.log</code> ou substituir por <code>console.debug</code>.</div>
       <div class="file">📄 src/components/layout/PwaRegister.tsx:11-12</div>
     </div>
 
     <div class="finding sugestao">
       <span class="badge badge-sugestao">SUGESTÃO</span>
-      <h3>Estilos inline no componente de preview</h3>
+      <h3>Estilos inline no PedidoPreview (184 linhas)</h3>
       <p>O componente <code>PedidoPreview.tsx</code> usa estilos CSS diretamente no HTML (inline styles). Isso dificulta a manutenção e impede o uso do Tailwind CSS.</p>
-      <p><strong>Impacto:</strong> Menor manutenibilidade, mas não afeta o funcionamento.</p>
-      <div class="fix">✅ <strong>Melhoria:</strong> Migrar para classes Tailwind. Como o preview é usado para PDF, manter um arquivo de estilos separado para impressão.</div>
-      <div class="file">📄 src/components/pedido/PedidoPreview.tsx (184 linhas, tudo inline)</div>
+      <div class="fix">✅ <strong>Melhoria:</strong> Migrar para classes Tailwind. Como o preview é usado para PDF (html2canvas), manter um CSS separado para impressão.</div>
+      <div class="file">📄 src/components/pedido/PedidoPreview.tsx</div>
     </div>
   </div>
 
@@ -154,11 +160,18 @@
 
     <div class="finding sugestao">
       <span class="badge badge-sugestao">SUGESTÃO</span>
-      <h3>Auth layout faz autenticação no client-side</h3>
-      <p>O layout das páginas protegidas (<code>src/app/(auth)/layout.tsx</code>) é um <strong>client component</strong> que redireciona se não houver usuário. Isso significa que o conteúdo protegido é enviado ao navegador antes do redirecionamento.</p>
-      <p><strong>Impacto:</strong> Leve — o middleware já protege antes, mas seria mais seguro fazer a verificação no servidor.</p>
+      <h3>Auth layout como client component</h3>
+      <p>O layout das páginas protegidas (<code>src/app/(auth)/layout.tsx</code>) é um client component que redireciona via <code>useEffect</code>. Isso significa que o conteúdo protegido é enviado ao navegador antes do redirecionamento.</p>
       <div class="fix">✅ <strong>Melhoria:</strong> Mover a verificação de auth para Server Components, usando <code>redirect()</code> do Next.js diretamente.</div>
       <div class="file">📄 src/app/(auth)/layout.tsx</div>
+    </div>
+
+    <div class="finding sugestao">
+      <span class="badge badge-sugestao">SUGESTÃO</span>
+      <h3>Pasta /lib/store existe mas está vazia</h3>
+      <p>A pasta <code>src/lib/store</code> existe no projeto mas não contém nenhum arquivo. Isso indica que foi criada para um gerenciamento de estado (como Zustand) que nunca foi implementado. O auth usa um sistema manual de estado global com listeners.</p>
+      <div class="fix">✅ <strong>Melhoria:</strong> Remover a pasta vazia ou implementar um gerenciamento de estado adequado (Zustand ou Jotai).</div>
+      <div class="file">📁 src/lib/store/ (vazia)</div>
     </div>
   </div>
 
@@ -167,21 +180,20 @@
     <h2>⚡ Performance</h2>
 
     <div class="finding importante">
-      <span class="badge badge-importante">IMPORTANT</span>
-      <h3>Consultas ao banco sem limite ou select específico</h3>
-      <p>Várias consultas no dashboard e em outras páginas usam <code>select('*')</code> ou não limitam a quantidade de resultados. Isso traz dados desnecessários do banco, deixando o app mais lento.</p>
-      <p><strong>Impacto no negócio:</strong> O app pode ficar lento conforme a quantidade de dados cresce. Clientes com muitos pedidos vão perceber lentidão.</p>
-      <div class="fix">✅ <strong>Correção:</strong> Especificar só as colunas necessárias (<code>select('id, name, phone')</code>) e adicionar paginação.</div>
-      <div class="file">📄 dashboard/page.tsx · ClienteBusca.tsx · storage.ts</div>
+      <span class="badge badge-importante">IMPORTANTE</span>
+      <h3>11 consultas ao banco com select('*') — dados desnecessários</h3>
+      <p>Foram encontradas <strong>11 consultas</strong> usando <code>select('*')</code> ou sem especificar colunas. Isso traz TODOS os dados da tabela, inclusive colunas pesadas que não são usadas, deixando o app mais lento conforme os dados crescem.</p>
+      <p><strong>Impacto no negócio:</strong> O app vai ficando mais lento conforme você acumula pedidos e clientes. Páginas como a lista de clientes e o dashboard são as mais afetadas.</p>
+      <div class="fix">✅ <strong>Correção:</strong> Especificar só as colunas necessárias. Ex: <code>select('id, name, phone')</code> em vez de <code>select('*')</code>.</div>
+      <div class="file">📄 clientes/page.tsx:23 · clientes/[id]/page.tsx:28,37,38 · orcamentos/page.tsx:40 · orcamentos/[id]/page.tsx:33 · pedidos/page.tsx:27 · pedidos/[id]/page.tsx:32 · agendamentos/page.tsx:80 · Checklist.tsx:56 · auth.ts:67</div>
     </div>
 
     <div class="finding sugestao">
       <span class="badge badge-sugestao">SUGESTÃO</span>
-      <h3>Imagens sem otimização</h3>
-      <p>As fotos dos pedidos são exibidas usando <code>&lt;img&gt;</code> em vez do <code>&lt;Image&gt;</code> do Next.js. O Next.js otimiza imagens automaticamente (redimensionamento, formato WebP, lazy loading).</p>
-      <p><strong>Impacto:</strong> Fotos pesadas demoram para carregar, especialmente no celular.</p>
-      <div class="fix">✅ <strong>Melhoria:</strong> Usar <code>next/image</code> com <code>loading="lazy"</code> e tamanhos adequados.</div>
-      <div class="file">📄 src/components/pedido/PhotoGallery.tsx</div>
+      <h3>Imagens sem otimização — sem next/image</h3>
+      <p>As fotos dos pedidos são exibidas usando <code>&lt;img&gt;</code> nativo em vez do <code>&lt;Image&gt;</code> do Next.js. O Next.js otimiza imagens automaticamente (redimensionamento, formato WebP, lazy loading).</p>
+      <div class="fix">✅ <strong>Melhoria:</strong> Usar <code>next/image</code> com <code>sizes</code> e <code>priority={false}</code>.</div>
+      <div class="file">📄 src/components/pedido/PhotoGallery.tsx:69,109</div>
     </div>
   </div>
 
@@ -191,14 +203,15 @@
 
     <div class="finding critico">
       <span class="badge badge-critico">CRÍTICO</span>
-      <h3>Nenhum teste existe no projeto</h3>
-      <p>O projeto tem <strong>zero testes</strong>. Não há testes unitários, de integração ou de ponta a ponta. Qualquer alteração no código pode quebrar funcionalidades sem que ninguém perceba.</p>
-      <p><strong>Impacto no negócio:</strong> Cada atualização é uma aposta. Você só descobre que algo quebrou quando o cliente reclama.</p>
-      <div class="fix">✅ <strong>Correção:</strong> Começar pelos testes mais importantes:
-        <br>1. Testes das funções de cálculo (m², calha, retrátil)
-        <br>2. Testes dos formatadores (CPF, CNPJ, telefone, CEP)
-        <br>3. Testes de validação dos formulários
-        <br>4. Testes de autenticação</div>
+      <h3>Nenhum teste existe no projeto — cobertura zero</h3>
+      <p>O projeto tem <strong>0 testes</strong>. Não há testes unitários, de integração ou de ponta a ponta. Qualquer alteração no código pode quebrar funcionalidades sem que ninguém perceba.</p>
+      <p><strong>Impacto no negócio:</strong> Cada atualização é uma aposta. Você só descobre que algo quebrou quando o cliente reclama. Com 7.711 linhas de código, isso é um risco significativo.</p>
+      <div class="fix">✅ <strong>Correção — Testes prioritários (por ordem):</strong>
+        <br><strong>1.</strong> Testes das funções de cálculo (m², calha, retrátil +35cm)
+        <br><strong>2.</strong> Testes dos formatadores (CPF, CNPJ, telefone, CEP, moeda, extenso)
+        <br><strong>3.</strong> Testes de validação dos formulários (ClienteForm, PedidoForm)
+        <br><strong>4.</strong> Testes de autenticação (middleware, login, logout)
+        <br><strong>5.</strong> Testes de deadline (cálculo de prazos, status vencido/hoje/amanhã)</div>
     </div>
   </div>
 
@@ -206,19 +219,20 @@
   <div class="next-steps">
     <h2>📋 Próximos Passos (Priorizados)</h2>
     <ol>
-      <li><strong>Corrigir a vulnerabilidade do PostCSS</strong> — Rodar <code>npm update next</code> (5 minutos)</li>
-      <li><strong>Adicionar tratamento de erros</strong> — Substituir <code>catch {}</code> por logs + mensagens ao usuário (1-2 horas)</li>
-      <li><strong>Remover console.log</strong> — Limpar logs de produção (15 minutos)</li>
-      <li><strong>Criar testes das funções de cálculo</strong> — m², calha, retrátil (2-3 horas)</li>
-      <li><strong>Tipar os "any"</strong> — Criar interfaces para agendamentos e documentos (2-3 horas)</li>
-      <li><strong>Dividir o PedidoForm</strong> — Quebrar em componentes menores (meio dia)</li>
-      <li><strong>Otimizar consultas do banco</strong> — Adicionar select específico e paginação (1 hora)</li>
-      <li><strong>Melhorar a página pública de orçamento</strong> — Mover service key para API route (1 hora)</li>
+      <li><strong>Atualizar Next.js</strong> — <code>npm update next</code> (corrige PostCSS XSS) — 5 min</li>
+      <li><strong>Remover console.log</strong> — Limpar logs de produção — 10 min</li>
+      <li><strong>Adicionar error handling</strong> — Substituir <code>catch {}</code> por logs + mensagens ao usuário — 1-2h</li>
+      <li><strong>Criar tipos TypeScript</strong> — Interfaces para Appointment, Document, DeadlineOrder — substituir ~25 <code>any</code> — 2-3h</li>
+      <li><strong>Otimizar consultas</strong> — Trocar <code>select('*')</code> por colunas específicas em 11 pontos — 1h</li>
+      <li><strong>Criar testes dos cálculos</strong> — m², calha, retrátil, formatadores — 2-3h</li>
+      <li><strong>Dividir PedidoForm</strong> — Quebrar em 5-6 sub-componentes — 4-6h</li>
+      <li><strong>Isolar SERVICE_ROLE_KEY</strong> — Criar API route para orçamento público — 1h</li>
+      <li><strong>Limpar pasta vazia</strong> — Remover <code>src/lib/store/</code> — 1 min</li>
     </ol>
   </div>
 
   <div class="footer">
-    Auditoria gerada automaticamente · Toldos Fortaleza App · 18/05/2026
+    Auditoria geromaticamente pelo Agente Hermes · Toldos Fortaleza App · 18/05/2026 · 2ª rodada (análise completa)
   </div>
 </div>
 </body>
