@@ -105,6 +105,7 @@ export function PedidoPreview({
                   )}
                 </>
               )}
+              {product.observacao && <p style={{ margin: 0, fontStyle: 'italic', color: '#666' }}><b>Obs:</b> {product.observacao}</p>}
             </div>
           ))}
         </section>

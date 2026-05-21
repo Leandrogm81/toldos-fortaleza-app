@@ -1,2 +1,129 @@
 [2026-05-19 10:07:36] Iniciando verificação...
 [2026-05-19 10:35:24] Iniciando verificação...
+[2026-05-19 14:19:51] Iniciando verificação...
+[2026-05-19 14:20:55] Iniciando verificação...
+[2026-05-19 14:20:55] Build: OK
+[2026-05-19 14:54:31] Iniciando verificação...
+[2026-05-19 14:55:33] Iniciando verificação...
+[2026-05-19 14:55:33] Build: OK
+[2026-05-19 14:55:33] TypeScript: OK
+[2026-05-19 15:00:45] Iniciando verificação...
+[2026-05-19 15:00:45] Build: OK
+[2026-05-19 15:00:45] TypeScript: OK
+[2026-05-19 15:00:45] Lint: FALHOU
+[2026-05-19 15:00:45] Vulnerabilidades: 2
+[2026-05-19 15:00:45] Relatório gerado: /mnt/c/dev/toldos-fortaleza-app/auditoria/guardian/status-2026-05-19.html
+[2026-05-19 15:00:45] Score: 0 | Status: ATENCAO
+[2026-05-19 19:20:32] Iniciando verificação...
+[2026-05-19 19:23:49] Iniciando verificação...
+[2026-05-19 19:23:49] Build: OK
+[2026-05-19 19:23:49] TypeScript: OK
+[2026-05-19 19:23:49] Lint: FALHOU
+[2026-05-19 19:23:49] Vulnerabilidades: 2
+[2026-05-19 19:23:49] Relatório gerado: /mnt/c/dev/toldos-fortaleza-app/auditoria/guardian/status-2026-05-19.html
+[2026-05-19 19:23:49] Score: 0 | Status: ATENCAO
+[2026-05-19 20:00:05] Iniciando verificação...
+[2026-05-19 20:00:05] Build: OK
+[2026-05-19 20:00:05] TypeScript: OK
+[2026-05-19 20:00:05] Lint: FALHOU
+[2026-05-19 20:00:05] Vulnerabilidades: 2
+[2026-05-19 20:00:05] Relatório gerado: /mnt/c/dev/toldos-fortaleza-app/auditoria/guardian/status-2026-05-19.html
+[2026-05-19 20:00:05] Score: 0 | Status: ATENCAO
+[2026-05-19 20:36:02] Iniciando verificação...
+[2026-05-19 20:36:02] Build: OK
+[2026-05-19 20:36:02] TypeScript: OK
+[2026-05-19 20:36:02] Lint: FALHOU
+[2026-05-19 20:36:02] Vulnerabilidades: 2
+[2026-05-19 20:36:02] Relatório gerado: /mnt/c/dev/toldos-fortaleza-app/auditoria/guardian/status-2026-05-19.html
+[2026-05-19 20:36:02] Score: 0 | Status: ATENCAO
+[2026-05-19 21:11:05] Iniciando verificação...
+[2026-05-19 21:11:05] Build: OK
+[2026-05-19 21:11:05] TypeScript: OK
+[2026-05-19 21:11:05] Lint: FALHOU
+[2026-05-19 21:11:05] Vulnerabilidades: 2
+[2026-05-19 21:11:05] Relatório gerado: /mnt/c/dev/toldos-fortaleza-app/auditoria/guardian/status-2026-05-19.html
+[2026-05-19 21:11:05] Score: 0 | Status: ATENCAO
+[2026-05-19 21:45:12] Iniciando verificação...
+[2026-05-19 21:45:12] Build: OK
+[2026-05-19 21:45:12] TypeScript: OK
+[2026-05-19 21:45:12] Lint: FALHOU
+[2026-05-19 21:45:12] Vulnerabilidades: 2
+[2026-05-19 21:45:12] Relatório gerado: /mnt/c/dev/toldos-fortaleza-app/auditoria/guardian/status-2026-05-19.html
+[2026-05-19 21:45:12] Score: 0 | Status: ATENCAO
+[2026-05-19 22:20:23] Iniciando verificação...
+[2026-05-19 22:20:23] Build: OK
+[2026-05-19 22:20:23] TypeScript: OK
+[2026-05-19 22:20:23] Lint: FALHOU
+[2026-05-19 22:20:23] Vulnerabilidades: 2
+[2026-05-19 22:20:23] Relatório gerado: /mnt/c/dev/toldos-fortaleza-app/auditoria/guardian/status-2026-05-19.html
+[2026-05-19 22:20:23] Score: 0 | Status: ATENCAO
+[2026-05-19 22:56:37] Iniciando verificação...
+[2026-05-19 22:56:37] Build: OK
+[2026-05-19 22:56:37] TypeScript: OK
+[2026-05-19 22:56:37] Lint: FALHOU
+[2026-05-19 22:56:37] Vulnerabilidades: 2
+[2026-05-19 22:56:37] Relatório gerado: /mnt/c/dev/toldos-fortaleza-app/auditoria/guardian/status-2026-05-19.html
+[2026-05-19 22:56:37] Score: 0 | Status: ATENCAO
+[2026-05-19 23:33:19] Iniciando verificação...
+[2026-05-19 23:33:19] Build: OK
+[2026-05-19 23:33:19] TypeScript: OK
+[2026-05-19 23:33:19] Lint: FALHOU
+[2026-05-19 23:33:19] Vulnerabilidades: 2
+[2026-05-19 23:33:19] Relatório gerado: /mnt/c/dev/toldos-fortaleza-app/auditoria/guardian/status-2026-05-19.html
+[2026-05-19 23:33:19] Score: 0 | Status: ATENCAO
+[2026-05-19 23:40:23] Iniciando verificação...
+[2026-05-19 23:40:23] Build: OK
+[2026-05-19 23:40:23] TypeScript: OK
+[2026-05-19 23:40:23] Lint: FALHOU
+[2026-05-19 23:40:23] Vulnerabilidades: 2
+[2026-05-19 23:40:23] Relatório gerado: /mnt/c/dev/toldos-fortaleza-app/auditoria/guardian/status-2026-05-19.html
+[2026-05-19 23:40:23] Score: 0 | Status: ATENCAO
+[2026-05-20 00:16:13] Iniciando verificação...
+[2026-05-20 11:22:09] Iniciando verificação...
+[2026-05-20 11:53:22] Iniciando verificação...
+[2026-05-20 11:54:36] Iniciando verificação...
+[2026-05-20 11:54:36] Build: OK
+[2026-05-20 11:54:36] TypeScript: OK
+[2026-05-20 11:54:36] Lint: FALHOU
+[2026-05-20 11:54:36] Vulnerabilidades: 2
+[2026-05-20 11:54:36] Relatório gerado: /mnt/c/dev/toldos-fortaleza-app/auditoria/guardian/status-2026-05-20.html
+[2026-05-20 11:54:36] Score: 0 | Status: ATENCAO
+[2026-05-20 12:29:08] Iniciando verificação...
+[2026-05-20 12:30:19] Iniciando verificação...
+[2026-05-20 12:31:23] Iniciando verificação...
+[2026-05-20 12:31:23] Build: OK
+[2026-05-20 12:31:23] TypeScript: OK
+[2026-05-20 12:37:39] Iniciando verificação...
+[2026-05-20 12:37:39] Build: OK
+[2026-05-20 12:37:39] TypeScript: OK
+[2026-05-20 12:37:39] Lint: FALHOU
+[2026-05-20 12:37:39] Vulnerabilidades: 2
+[2026-05-20 12:37:39] Relatório gerado: /mnt/c/dev/toldos-fortaleza-app/auditoria/guardian/status-2026-05-20.html
+[2026-05-20 12:37:39] Score: 0 | Status: ATENCAO
+[2026-05-20 13:08:00] Iniciando verificação...
+[2026-05-20 13:09:06] Iniciando verificação...
+[2026-05-20 13:09:06] Build: OK
+[2026-05-20 13:09:06] TypeScript: OK
+[2026-05-20 13:44:34] Iniciando verificação...
+[2026-05-20 14:16:11] Iniciando verificação...
+[2026-05-20 14:16:11] Build: OK
+[2026-05-20 14:16:11] TypeScript: OK
+[2026-05-20 14:16:11] Lint: FALHOU
+[2026-05-20 14:16:11] Vulnerabilidades: 2
+[2026-05-20 14:16:11] Relatório gerado: /mnt/c/dev/toldos-fortaleza-app/auditoria/guardian/status-2026-05-20.html
+[2026-05-20 14:16:11] Score: 0 | Status: ATENCAO
+[2026-05-20 14:53:45] Iniciando verificação...
+[2026-05-20 14:53:45] Build: OK
+[2026-05-20 14:53:45] TypeScript: OK
+[2026-05-20 14:53:45] Lint: FALHOU
+[2026-05-20 14:53:45] Vulnerabilidades: 2
+[2026-05-20 14:53:45] Relatório gerado: /mnt/c/dev/toldos-fortaleza-app/auditoria/guardian/status-2026-05-20.html
+[2026-05-20 14:53:45] Score: 0 | Status: ATENCAO
+[2026-05-20 16:01:58] Iniciando verificação...
+[2026-05-20 17:06:58] Iniciando verificação...
+[2026-05-20 17:07:58] Iniciando verificação...
+[2026-05-20 17:07:58] Build: FALHOU
+[2026-05-20 17:07:58] TypeScript: OK
+[2026-05-21 13:40:21] Iniciando verificação...
+[2026-05-21 13:40:21] Build: FALHOU
+[2026-05-21 13:40:21] TypeScript: OK

@@ -13,7 +13,7 @@ para agentes de programação.
 - **Bibliotecas chave**: Recharts, Zod, html2canvas, jsPDF, date-fns, lucide-react
 - **Estrutura**: App Router com route groups (auth), Server Components, Supabase SSR
 - **Domínio**: Sistema de gestão para empresa de toldos/coberturas
-- **Módulos**: Orçamentos, Pedidos, Clientes, Agendamentos, Produção, Dashboard
+- **Módulos**: Orçamentos, Pedidos, Clientes, Agendamentos, Checklist, Produção, Dashboard
 - **PWA**: Ativo (InstallPrompt, PwaRegister)
 - **Testes**: Nenhum teste existe atualmente no projeto
 
@@ -37,6 +37,7 @@ para agentes de programação.
 - [ ] Validação de entrada do usuário (forms sem Zod ou sanitização)
 - [ ] Middleware de autenticação protegendo todas as rotas /(auth)/*
 - [ ] Row Level Security (RLS) habilitado nas tabelas Supabase
+- [ ] Páginas públicas com token (`/orcamento/[token]`, `/checklist/[token]`) usam API route ou helper server-side; o cliente não acessa `service_role` diretamente
 - [ ] URLs de API sem proteção de rate limiting
 - [ ] Dados sensíveis do cliente sem criptografia (CPF, endereço, telefone)
 - [ ] Dependências com vulnerabilidades conhecidas (npm audit)
@@ -71,7 +72,11 @@ para agentes de programação.
 - [ ] Falta de lazy loading em componentes pesados (PDF, gráficos)
 - [ ] Sem cache de dados onde seria aplicável
 
-### 5. TESTES (peso: sugestão → importante conforme cresce)
+### 5. INTERFACE / TEMA ESCURO (peso: importante)
+- [ ] Não existe toggle de tema/dark mode sem aprovação explícita (ex: `ThemeToggle.tsx` no Header)
+- [ ] Se houver, tratar como item de remoção no relatório
+
+### 6. TESTES (peso: sugestão → importante conforme cresce)
 - [ ] Existência de testes unitários (arquivos *.test.ts ou *.spec.ts)
 - [ ] Cobertura de testes nos formulários (validação Zod)
 - [ ] Testes nas funções de cálculo (m², regras de negócio)
@@ -94,7 +99,7 @@ Gerar arquivo em: /mnt/c/dev/toldos-fortaleza-app/auditoria/relatorio-DATA.html
 Formato:
 - HTML auto-contido (CSS inline, sem dependências externas)
 - Header com nome do projeto, data/hora da auditoria, resumo executivo
-- Seção por categoria (Segurança, Qualidade, Estrutura, Performance, Testes)
+- Seção por categoria (Segurança, Qualidade, Estrutura, Performance, Interface/Tema escuro, Testes)
 - Cada problema com: título simples, explicação em linguagem leiga (sem jargão),
   impacto no negócio, sugestão de correção
 - Cores por gravidade: vermelho (crítico), amarelo (importante), azul (sugestão)
@@ -107,7 +112,7 @@ Gerar arquivo em: /mnt/c/dev/toldos-fortaleza-app/auditoria/relatorio-DATA.md
 
 Formato:
 - YAML frontmatter com metadata (data, score, totais por gravidade)
-- Seção por categoria com achados técnicos
+- Seção por categoria com achados técnicos (Segurança, Qualidade, Estrutura, Performance, Interface/Tema escuro, Testes)
 - Cada achado com: arquivo, linha (se aplicável), descrição técnica,
   severidade, sugestão de correção com código quando possível
 - Seção "Testes Sugeridos" com lista de testes prioritários
@@ -116,7 +121,7 @@ Formato:
 
 ## Instruções de Execução
 
-1. Ler package.json, tsconfig.json, next.config.ts, .env.local, middleware.ts
+1. Ler package.json, tsconfig.json, next.config.ts, .env.local, src/middleware.ts
 2. Listar todos os arquivos .ts/.tsx em src/ (excluir .next/ e node_modules/)
 3. Para cada categoria do checklist, analisar os arquivos relevantes
 4. Contar métricas: total de arquivos, linhas de código, componentes, utils
